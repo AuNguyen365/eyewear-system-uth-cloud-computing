@@ -1,7 +1,14 @@
 import axios from 'https://cdn.jsdelivr.net/npm/axios@1.6.7/+esm';
 
+const getBackendURL = () => {
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    return 'http://localhost:8000';
+  }
+  return `${window.location.protocol}//${window.location.hostname}:8000`;
+};
+
 const apiClient = axios.create({
-  baseURL: 'http://13.54.185.96:8000/api/v1',
+  baseURL: `${getBackendURL()}/api/v1`,
   headers: {
     'Content-Type': 'application/json',
   },

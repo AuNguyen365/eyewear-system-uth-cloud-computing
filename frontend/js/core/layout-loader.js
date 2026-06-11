@@ -173,8 +173,12 @@
     function resolveAvatarUrl(avatar) {
         if (!avatar) return `${projectRoot}assets/images/avatars/avatar-1.jpg`;
         if (avatar.startsWith('http://') || avatar.startsWith('https://')) return avatar;
-        if (avatar.startsWith('/')) return `http://13.54.185.96:8000${avatar}`;
-        return `http://13.54.185.96:8000/${avatar.replace(/^\/+/, '')}`;
+        const backendUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+            ? 'http://localhost:8000'
+            : `${window.location.protocol}//${window.location.hostname}:8000`;
+            
+        if (avatar.startsWith('/')) return `${backendUrl}${avatar}`;
+        return `${backendUrl}/${avatar.replace(/^\/+/, '')}`;
     }
 
     async function updateAuthUI() {
