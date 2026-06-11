@@ -25,7 +25,11 @@ const api = {
     fixImagePath: (path, depth = '../../') => {
         if (typeof path !== 'string' || !path) return depth + 'assets/images/products/placeholder.png';
         if (path.startsWith('http')) return path;
-        if (path.startsWith('/storage')) return `http://13.54.185.96:8000${path}`;
+        const backendUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+            ? 'http://localhost:8000'
+            : `${window.location.protocol}//${window.location.hostname}:8000`;
+            
+        if (path.startsWith('/storage')) return `${backendUrl}${path}`;
         const cleanPath = path.startsWith('/') ? path.substring(1) : path;
         return encodeURI(depth + cleanPath);
     }
