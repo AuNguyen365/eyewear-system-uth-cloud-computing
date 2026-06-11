@@ -173,8 +173,8 @@
     function resolveAvatarUrl(avatar) {
         if (!avatar) return `${projectRoot}assets/images/avatars/avatar-1.jpg`;
         if (avatar.startsWith('http://') || avatar.startsWith('https://')) return avatar;
-        if (avatar.startsWith('/')) return `http://localhost:8000${avatar}`;
-        return `http://localhost:8000/${avatar.replace(/^\/+/, '')}`;
+        if (avatar.startsWith('/')) return `http://13.54.185.96:8000${avatar}`;
+        return `http://13.54.185.96:8000/${avatar.replace(/^\/+/, '')}`;
     }
 
     async function updateAuthUI() {

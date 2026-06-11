@@ -54,7 +54,7 @@ const QuickView = {
             } else if (rawImg.startsWith('http')) {
                 img = rawImg;
             } else if (rawImg.startsWith('/storage')) {
-                img = 'http://localhost:8000' + rawImg;
+                img = 'http://13.54.185.96:8000' + rawImg;
             } else {
                 const cleanPath = rawImg.startsWith('/') ? rawImg.substring(1) : rawImg;
                 img = projectRoot + cleanPath;

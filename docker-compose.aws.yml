@@ -1,0 +1,37 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: eyewear-backend
+    restart: always
+    ports:
+      - "8000:80"
+    environment:
+      # Connect to Home Server database via WireGuard VPN IP
+      DB_HOST: 10.0.0.2
+      DB_PORT: 3306
+      DB_DATABASE: eyewear_system
+      DB_USERNAME: root
+      DB_PASSWORD: "" # Fill in your Home Server MySQL root password if any
+      
+      # AWS Elastic IP configurations
+      CORS_ALLOWED_ORIGIN: "http://13.54.185.96:5500"
+      APP_URL: "http://13.54.185.96:8000"
+      APP_ENV: production
+      APP_DEBUG: "false"
+    volumes:
+      - ./backend:/var/www/html
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: eyewear-frontend
+    restart: always
+    ports:
+      - "5500:5500"
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+    depends_on:
+      - backend
