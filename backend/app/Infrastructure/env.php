@@ -51,5 +51,20 @@ function load_env_config()
     $envConfig = is_file($envPath) ? parse_env_file($envPath) : [];
     $localConfig = is_file($envLocalPath) ? parse_env_file($envLocalPath) : [];
 
-    return array_merge($envConfig, $localConfig);
+    $config = array_merge($envConfig, $localConfig);
+
+    $keys = [
+        'APP_NAME', 'APP_ENV', 'APP_URL', 'APP_DEBUG', 'API_PREFIX',
+        'DB_CONNECTION', 'DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD',
+        'CORS_ALLOWED_ORIGIN',
+        'MAIL_MAILER', 'MAIL_HOST', 'MAIL_PORT', 'MAIL_USERNAME', 'MAIL_PASSWORD', 'MAIL_ENCRYPTION', 'MAIL_FROM_ADDRESS', 'MAIL_FROM_NAME'
+    ];
+    foreach ($keys as $key) {
+        $val = getenv($key);
+        if ($val !== false && $val !== '') {
+            $config[$key] = $val;
+        }
+    }
+
+    return $config;
 }

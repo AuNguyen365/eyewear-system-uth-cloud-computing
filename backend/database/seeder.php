@@ -47,17 +47,32 @@ if (!function_exists('parse_env_file')) {
 if (!function_exists('load_env_config')) {
     function load_env_config(): array
     {
+        $config = [];
         foreach ([
             APP_ROOT . DIRECTORY_SEPARATOR . '.env.local',
             APP_ROOT . DIRECTORY_SEPARATOR . '.env',
             dirname(APP_ROOT) . DIRECTORY_SEPARATOR . '.env',
         ] as $path) {
             if (is_file($path)) {
-                return parse_env_file($path);
+                $config = parse_env_file($path);
+                break;
             }
         }
 
-        return [];
+        $keys = [
+            'APP_NAME', 'APP_ENV', 'APP_URL', 'APP_DEBUG', 'API_PREFIX',
+            'DB_CONNECTION', 'DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD',
+            'CORS_ALLOWED_ORIGIN',
+            'MAIL_MAILER', 'MAIL_HOST', 'MAIL_PORT', 'MAIL_USERNAME', 'MAIL_PASSWORD', 'MAIL_ENCRYPTION', 'MAIL_FROM_ADDRESS', 'MAIL_FROM_NAME'
+        ];
+        foreach ($keys as $key) {
+            $val = getenv($key);
+            if ($val !== false && $val !== '') {
+                $config[$key] = $val;
+            }
+        }
+
+        return $config;
     }
 }
 

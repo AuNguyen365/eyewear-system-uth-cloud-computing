@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: eyewear-mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: eyewear_system
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - eyewear-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: eyewear-backend
+    restart: always
+    ports:
+      - "8000:80"
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: eyewear_system
+      DB_USERNAME: root
+      DB_PASSWORD: ""
+      CORS_ALLOWED_ORIGIN: "http://localhost:5500"
+      APP_URL: "http://localhost:8000"
+      APP_ENV: local
+      APP_DEBUG: "true"
+    volumes:
+      - ./backend:/var/www/html
+    depends_on:
+      - db
+    networks:
+      - eyewear-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: eyewear-frontend
+    restart: always
+    ports:
+      - "5500:5500"
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+    depends_on:
+      - backend
+    networks:
+      - eyewear-network
+
+networks:
+  eyewear-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
