@@ -1,0 +1,81 @@
+<!--=============== OPERATIONS MODULE ===============-->
+<section class="ops-topbar">
+    <div>
+        <h1 class="ops-title">Operations Dashboard</h1>
+        <p class="ops-subtitle">Track lab throughput, identify bottlenecks, and keep shipment SLA on schedule.</p>
+    </div>
+    <div class="topbar-actions">
+        <button class="btn btn--sm"><i class="fi fi-rs-refresh"></i> Sync Queue</button>
+        <button type="button" class="ops-ghost-btn"><i class="fi fi-rs-print"></i> Shift Report</button>
+    </div>
+</section>
+
+<section class="kpi-grid">
+    <article class="kpi-card">
+        <div class="kpi-label">Orders In Lab</div>
+        <div class="kpi-value">...</div>
+        <p class="kpi-note">Tracking actively</p>
+    </article>
+    <article class="kpi-card">
+        <div class="kpi-label">Shipped Today</div>
+        <div class="kpi-value">...</div>
+        <p class="kpi-note">Since 00:00</p>
+    </article>
+    <article class="kpi-card">
+        <div class="kpi-label">Pending QC</div>
+        <div class="kpi-value">...</div>
+        <p class="kpi-note">Quality inspection</p>
+    </article>
+    <article class="kpi-card">
+        <div class="kpi-label">Avg Turnaround</div>
+        <div class="kpi-value">...</div>
+        <p class="kpi-note">Calculated daily</p>
+    </article>
+</section>
+
+<section class="ops-layout">
+    <article class="panel">
+        <header class="panel-header">
+            <div>
+                <h2 class="panel-title">Active Production Queue</h2>
+                <span class="panel-subtitle">Current orders and next actions</span>
+            </div>
+        </header>
+
+        <div class="ops-table-container">
+            <table class="queue-table ops-table">
+                <thead class="ops-table__head">
+                    <tr>
+                        <th class="ops-table__heading">Order</th>
+                        <th class="ops-table__heading">Customer & Shipping</th>
+                        <th class="ops-table__heading">Production Details</th>
+                        <th class="ops-table__heading">Current Step</th>
+                        <th class="ops-table__heading">Progress</th>
+                        <th class="ops-table__heading">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="ops-table__row">
+                        <td colspan="5" class="ops-table__cell table-state-cell">Loading production queue...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </article>
+
+    <div class="panel-stack">
+        <article class="panel">
+            <h3 class="panel-title panel-title--spaced">Bottleneck Alerts</h3>
+            <div class="ops-alert-list">
+                <div class="ops-alert-card ops-alert-card--warning">
+                    <strong>Coating Station</strong>: 7 jobs delayed
+                </div>
+                <div class="ops-alert-card ops-alert-card--success">
+                    <strong>QC Queue</strong>: 12 pending checks
+                </div>
+            </div>
+        </article>
+    </div>
+</section>
+
+<script type="module" src="/js/dashboard/modules/ops-controller.js"></script>

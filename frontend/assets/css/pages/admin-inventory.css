@@ -1,0 +1,147 @@
+/* =============== INVENTORY PAGE REFINED STYLES =============== */
+
+#inventoryTable {
+    table-layout: auto;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #fff;
+}
+
+#inventoryTable th, 
+#inventoryTable td {
+    padding: 1.5rem 1rem !important;
+    vertical-align: middle;
+    text-align: left;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+#inventoryTable th {
+    background: #f8fafc;
+    color: #475569;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+/* Product Cell Styling */
+.product-cell {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    min-width: 280px;
+}
+
+.product-image {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    border-radius: 8px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 4px;
+    flex-shrink: 0;
+}
+
+.product-name {
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+/* Variant Badges */
+.variant-badge {
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    background: #f1f5f9;
+    color: #475569;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-right: 0.4rem;
+}
+
+.product-sku {
+    font-family: 'Monaco', 'Consolas', monospace;
+    font-size: 0.85rem;
+    color: #64748b;
+    background: #f8fafc;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+}
+
+/* Stock Columns */
+.stock-cell {
+    text-align: center !important;
+    font-weight: 600;
+    min-width: 100px;
+}
+
+/* Action Column */
+#inventoryTable th:last-child, 
+#inventoryTable td:last-child {
+    text-align: center !important;
+    min-width: 220px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.btn-small {
+    padding: 0.5rem 0.85rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+}
+
+.btn-edit { background: #f0fdfa; color: #0d9488; border-color: #ccfbf1; }
+.btn-edit:hover { background: #0d9488; color: #fff; }
+
+.btn-save { background: #ecfdf5; color: #059669; border-color: #d1fae5; display: none; }
+.btn-save:hover { background: #059669; color: #fff; }
+
+.btn-cancel { background: #fff1f2; color: #e11d48; border-color: #ffe4e6; display: none; }
+.btn-cancel:hover { background: #e11d48; color: #fff; }
+
+/* Status Badges */
+.status-badge {
+    padding: 0.4rem 0.8rem;
+    border-radius: 99px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.status-in-stock { background: #dcfce7; color: #166534; }
+.status-low-stock { background: #fef9c3; color: #854d0e; }
+.status-out-of-stock { background: #fee2e2; color: #991b1b; }
+
+/* Stock Input */
+.stock-input {
+    width: 60px;
+    padding: 0.4rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    text-align: center;
+    font-weight: 600;
+}
+
+@media (max-width: 1400px) {
+    #inventoryTable { font-size: 0.9rem; }
+    .product-cell { min-width: 220px; }
+    .product-image { width: 45px; height: 45px; }
+}

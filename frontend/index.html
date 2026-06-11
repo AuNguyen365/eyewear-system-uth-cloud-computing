@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--=============== FLATICON ===============-->
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-straight/css/uicons-regular-straight.css"
+    />
+
+    <!--=============== SWIPER CSS ===============-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+
+    <!-- AOS CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!--=============== CSS ===============-->
+    <link rel="stylesheet" href="assets/css/styles.css" />
+
+    <!--=============== LAYOUT LOADER ===============-->
+    <script src="js/core/layout-loader.js" defer></script>
+
+    <title>EVELENS — High-End Optical Solutions</title>
+  </head>
+  <body>
+    <!--=============== HEADER ===============-->
+    <header class="header" data-include="layout/Header"></header>
+
+    <!--=============== MAIN ===============-->
+    <main class="main">
+      <!--=============== HOME ===============-->
+      <section class="home section--lg" data-aos="fade-in">
+        <div class="home__container container grid">
+          <div class="home__content">
+            <span class="home__subtitle">Hot Promotions</span>
+            <h1 class="home__title">
+              Redefining Vision <span>Digital Precision</span>
+            </h1>
+            <p class="home__description">
+              Save more with coupons & up tp 20% off
+            </p>
+            <a href="pages/shop/" class="btn">Shop Now</a>
+          </div>
+          <img src="assets/images/banners/eyewear_banner.jpg" class="home__img" alt="eyewear" />
+        </div>
+      </section>
+
+      <!--=============== CATEGORIES ===============-->
+      <section class="categories container section" data-aos="fade-up">
+        <h3 class="section__title"><span>Popular</span> Categories</h3>
+        <div class="categories__container swiper">
+          <div class="swiper-wrapper">
+            <a href="pages/shop/" class="category__item swiper-slide">
+              <img
+                src="assets/images/ui/category-sun.png"
+                alt=""
+                class="category__img"
+              />
+              <h3 class="category__title">Sunglasses</h3>
+            </a>
+            <a href="pages/shop/" class="category__item swiper-slide">
+              <img
+                src="assets/images/lens/chemi U6 1.74.jpg"
+                alt=""
+                class="category__img"
+              />
+              <h3 class="category__title">Prescription</h3>
+            </a>
+            <a href="pages/shop/" class="category__item swiper-slide">
+              <img
+                src="assets/images/products/frame-an-05.png"
+                alt=""
+                class="category__img"
+              />
+              <h3 class="category__title">Blue Light</h3>
+            </a>
+            <a href="pages/shop/" class="category__item swiper-slide">
+              <img
+                src="assets/images/products/frame-an-03.png"
+                alt=""
+                class="category__img"
+              />
+              <h3 class="category__title">Luxury Frames</h3>
+            </a>
+            <a href="pages/shop/" class="category__item swiper-slide">
+              <img
+                src="assets/images/products/frame-an-05.png"
+                alt=""
+                class="category__img"
+              />
+              <h3 class="category__title">Contact Lenses</h3>
+            </a>
+            <a href="pages/shop/" class="category__item swiper-slide">
+              <img
+                src="assets/images/products/frame-an-05.png"
+                alt=""
+                class="category__img"
+              />
+              <h3 class="category__title">Pillowcase</h3>
+            </a>
+            <a href="pages/shop/" class="category__item swiper-slide">
+              <img
+                src="assets/images/products/frame-an-05.png"
+                alt=""
+                class="category__img"
+              />
+              <h3 class="category__title">Jumpsuit</h3>
+            </a>
+            <a href="pages/shop/" class="category__item swiper-slide">
+              <img
+                src="assets/images/products/frame-an-05.png"
+                alt=""
+                class="category__img"
+              />
+              <h3 class="category__title">Hats</h3>
+            </a>
+          </div>
+
+          <div class="swiper-button-prev">
+            <i class="fi fi-rs-angle-left"></i>
+          </div>
+          <div class="swiper-button-next">
+            <i class="fi fi-rs-angle-right"></i>
+          </div>
+        </div>
+      </section>
+
+      <!--=============== PRODUCTS ===============-->
+      <section class="products container section" data-aos="fade-up">
+        <div class="tab__btns">
+          <span class="tab__btn active-tab" data-target="#featured"
+            >Featured</span
+          >
+          <span class="tab__btn" data-target="#popular">Popular</span>
+          <span class="tab__btn" data-target="#new-added">New Added</span>
+        </div>
+
+        <div class="tab__items">
+          <div class="tab__item active-tab" content id="featured">
+            <div class="products__container grid" id="featured-products"></div>
+          </div>
+          <div class="tab__item" content id="popular">
+            <div class="products__container grid" id="popular-products"></div>
+          </div>
+          <div class="tab__item" content id="new-added">
+            <div class="products__container grid" id="new-added-products"></div>
+          </div>
+        </div>
+      </section>
+
+      <!--=============== DEALS ===============-->
+      <section class="deals section" data-aos="fade-up">
+        <div class="deals__container container grid">
+          <div class="deals__item">
+            <div class="deals__group">
+              <h3 class="deals__brand">Deals of the Day</h3>
+              <span class="deals__category">Limited quantities</span>
+            </div>
+            <h4 class="deals__title">Summer Collection New Modern Design</h4>
+            <div class="deals__price flex">
+              <span class="new__price">720.000 đ</span>
+              <span class="old__price">890.000 đ</span>
+            </div>
+            <div class="deals__group">
+              <p class="deals__countdown-text">Hurry Up! Offer Ends In:</p>
+              <div class="countdown">
+                <div class="countdown__amount">
+                  <p class="countdown__period">02</p>
+                  <span class="unit">Days</span>
+                </div>
+                <div class="countdown__amount">
+                  <p class="countdown__period">22</p>
+                  <span class="unit">Hours</span>
+                </div>
+                <div class="countdown__amount">
+                  <p class="countdown__period">57</p>
+                  <span class="unit">Mins</span>
+                </div>
+                <div class="countdown__amount">
+                  <p class="countdown__period">28</p>
+                  <span class="unit">Sec</span>
+                </div>
+              </div>
+            </div>
+            <div class="deals__btn">
+              <a href="pages/details/" class="btn btn--md">Shop Now</a>
+            </div>
+          </div>
+          <div class="deals__item">
+            <div class="deals__group">
+              <h3 class="deals__brand">Women Eyewear</h3>
+              <span class="deals__category">Frames & Bag</span>
+            </div>
+            <h4 class="deals__title">Try Something new on vacation</h4>
+            <div class="deals__price flex">
+              <span class="new__price">680.000 đ</span>
+              <span class="old__price">850.000 đ</span>
+            </div>
+            <div class="deals__group">
+              <p class="deals__countdown-text">Hurry Up! Offer Ends In:</p>
+              <div class="countdown">
+                <div class="countdown__amount">
+                  <p class="countdown__period">02</p>
+                  <span class="unit">Days</span>
+                </div>
+                <div class="countdown__amount">
+                  <p class="countdown__period">22</p>
+                  <span class="unit">Hours</span>
+                </div>
+                <div class="countdown__amount">
+                  <p class="countdown__period">57</p>
+                  <span class="unit">Mins</span>
+                </div>
+                <div class="countdown__amount">
+                  <p class="countdown__period">28</p>
+                  <span class="unit">Sec</span>
+                </div>
+              </div>
+            </div>
+            <div class="deals__btn">
+              <a href="pages/details/" class="btn btn--md">Shop Now</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!--=============== NEW ARRIVALS ===============-->
+      <section class="new__arrivals container section" data-aos="fade-up">
+        <h3 class="section__title" data-aos="fade-up" data-aos-delay="100"><span>New</span> Arrivals</h3>
+        <div class="new__container swiper">
+          <div class="swiper-wrapper" id="new-arrivals-products"></div>
+
+          <div class="swiper-button-prev">
+            <i class="fi fi-rs-angle-left"></i>
+          </div>
+          <div class="swiper-button-next">
+            <i class="fi fi-rs-angle-right"></i>
+          </div>
+        </div>
+      </section>
+
+      <!--=============== SHOWCASE ===============-->
+      <section class="showcase section" data-aos="fade-up">
+        <div class="showcase__container container grid">
+          <div class="showcase__wrapper">
+            <h3 class="section__title" data-aos="fade-up" data-aos-delay="100">Hot Releases</h3>
+            <div id="hot-releases"></div>
+          </div>
+          <div class="showcase__wrapper">
+            <h3 class="section__title" data-aos="fade-up" data-aos-delay="200">Deals & Outlet</h3>
+            <div id="deals-outlet"></div>
+          </div>
+          <div class="showcase__wrapper">
+            <h3 class="section__title" data-aos="fade-up" data-aos-delay="300">Top Selling</h3>
+            <div id="top-selling"></div>
+          </div>
+        </div>
+      </section>
+
+      <!--=============== NEWSLETTER ===============-->
+      <section class="newsletter section home__newsletter" data-include="components/newsletter"></section>
+    </main>
+
+    <!--=============== FOOTER ===============-->
+    <footer class="footer container" data-include="layout/Footer"></footer>
+
+    <!--=============== SWIPER JS ===============-->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!--=============== MAIN JS ===============-->
+    <script src="js/main.js"></script>
+    <script type="module" src="js/pages/home.js"></script>
+  </body>
+</html>

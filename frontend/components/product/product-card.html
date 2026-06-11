@@ -1,0 +1,49 @@
+<div class="catalog-item {{STOCK_CLASS}}">
+    <a href="{{DETAIL_URL}}" class="catalog-item__overlay-link" aria-label="View Details"></a>
+    <div class="thumb">
+        <span class="badge">{{BADGE}}</span>
+        <span class="out-of-stock-label">{{STOCK_LABEL}}</span>
+        <a href="{{DETAIL_URL}}">
+            <img src="{{IMAGE}}" alt="{{NAME}}" data-fallback-src="../../assets/images/products/placeholder.png">
+        </a>
+        <div class="thumb-actions">
+            <button type="button" class="thumb-action-btn" title="Quick View" data-action="quick-view" data-product-id="{{PRODUCT_ID}}">
+                <i class="fi fi-rs-eye"></i>
+            </button>
+            <button type="button" class="thumb-action-btn {{WISHLIST_CLASS}}" title="{{WISHLIST_LABEL}}" data-action="toggle-wishlist" data-product-id="{{PRODUCT_ID}}">
+                <i class="{{WISHLIST_ICON}}"></i>
+            </button>
+            <button type="button" class="thumb-action-btn" title="Add to Cart" data-action="add-to-cart" data-variant-id="{{ID}}">
+                <i class="fi fi-rs-shopping-cart"></i>
+            </button>
+        </div>
+    </div>
+    <div class="body">
+        <div class="meta">{{CATEGORY}} — {{BRAND}}</div>
+        <a href="{{DETAIL_URL}}">
+            <h3 class="name">{{NAME}}</h3>
+        </a>
+        <div class="catalog-rating">
+            <div class="catalog-rating__stars">
+                <i class="fi fi-rs-star"></i>
+                <i class="fi fi-rs-star"></i>
+                <i class="fi fi-rs-star"></i>
+                <i class="fi fi-rs-star"></i>
+                <i class="fi fi-rs-star"></i>
+            </div>
+        </div>
+        <div class="catalog-actions">
+            <div class="catalog-price-group">
+                <span class="price">{{PRICE}}</span>
+                <span class="old-price">{{OLD_PRICE}}</span>
+            </div>
+            <div class="catalog-cart-wrap">
+                <button type="button" class="catalog-cart-btn" aria-label="Add to cart" data-action="add-to-cart" data-variant-id="{{ID}}">
+                    <i class="fi fi-rs-shopping-bag"></i>
+                </button>
+                <div class="catalog-cart-tooltip">Add to cart</div>
+            </div>
+        </div>
+    </div>
+</div>
+

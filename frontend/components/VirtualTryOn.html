@@ -1,0 +1,26 @@
+<!-- Virtual Try-On Modal Component -->
+<div id="virtual-tryon-modal" class="modal">
+    <div class="modal__content">
+        <div class="modal__header">
+            <h3>Virtual Try-On</h3>
+            <button class="modal__close" onclick="closeTryOn()">&times;</button>
+        </div>
+        <div class="modal__body">
+            <div id="camera-placeholder" class="tryon-placeholder">
+                <i class="fi fi-rs-camera"></i>
+                <p>Initializing Camera...</p>
+                <small>(Camera access required for AR simulation)</small>
+            </div>
+            <video id="tryon-video" autoplay playsinline></video>
+            <canvas id="tryon-canvas"></canvas>
+        </div>
+        <div class="modal__footer">
+            <button class="btn btn--sm" onclick="snapshot()">Take Photo</button>
+            <button class="btn btn--sm btn-close" onclick="closeTryOn()">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- Component Styles & Scripts -->
+<link rel="stylesheet" href="/assets/css/components/virtual-tryon.css">
+<script src="/js/components/virtual-tryon.js"></script>

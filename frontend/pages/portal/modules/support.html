@@ -1,0 +1,57 @@
+<!--=============== SUPPORT MODULE â€” Staff Dashboard ===============-->
+<h2 class="section__title">Support Ticket Management</h2>
+
+<div class="metrics-grid">
+    <div class="metric-card">
+        <div class="metric-label">Open Tickets</div>
+        <div class="metric-value" id="support-open-count">...</div>
+        <div class="badge badge-pending">Needs Response</div>
+    </div>
+    <div class="metric-card">
+        <div class="metric-label">In Progress</div>
+        <div class="metric-value" id="support-inprogress-count">...</div>
+        <div class="badge badge-qc">Being Handled</div>
+    </div>
+    <div class="metric-card">
+        <div class="metric-label">Resolved Today</div>
+        <div class="metric-value" id="support-resolved-count">...</div>
+        <div class="badge badge-active">Closed</div>
+    </div>
+</div>
+
+<div class="admin-table container admin-panel">
+    <div class="admin-toolbar">
+        <h3 class="table__title admin-toolbar__title">All Customer Support Tickets</h3>
+        <div class="admin-toolbar__actions">
+            <select id="support-filter-status" class="form__input admin-filter-control">
+                <option value="">All Statuses</option>
+                <option value="open">Open</option>
+                <option value="in_progress">In Progress</option>
+                <option value="resolved">Resolved</option>
+                <option value="closed">Closed</option>
+            </select>
+            <button id="reloadSupportTicketsBtn" type="button" class="btn btn--sm">
+                <i class="fi fi-rs-refresh"></i> Refresh
+            </button>
+        </div>
+    </div>
+
+    <table class="table" id="supportTicketsTable">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Customer</th>
+                <th>Subject</th>
+                <th>Status</th>
+                <th>Priority</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="supportTicketsBody">
+            <tr><td colspan="7" class="table-state-cell">Loading tickets...</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<script type="module" src="/js/dashboard/modules/support-module.js"></script>

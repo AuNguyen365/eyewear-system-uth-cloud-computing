@@ -1,0 +1,48 @@
+<!--=============== SETTINGS MODULE ===============-->
+<h1 class="section__title">Global Settings & Management</h1>
+
+<div class="grid admin-grid--settings">
+    <div class="metric-card">
+        <h3 class="footer__title">Personnel & Roles</h3>
+        <div class="grid admin-stack">
+            <div class="admin-inline-card">
+                <strong>System Admin:</strong> <span id="countAdmin">Loading...</span>
+            </div>
+            <div class="admin-inline-card">
+                <strong>Managers:</strong> <span id="countManager">Loading...</span>
+            </div>
+            <div class="admin-inline-card">
+                <strong>Sales Staff:</strong> <span id="countSales">Loading...</span>
+            </div>
+            <div class="admin-inline-card">
+                <strong>Operations Staff:</strong> <span id="countOps">Loading...</span>
+            </div>
+            <button type="button" id="manageStaffBtn" class="btn btn--sm admin-button-block">Manage All Staff</button>
+        </div>
+    </div>
+
+    <div class="metric-card">
+        <h3 class="footer__title">Pricing & Combo Rules</h3>
+        <form class="form grid" id="settingsForm">
+            <div class="grid admin-grid--two">
+                <div>
+                    <label>Default Lens Fee ($)</label>
+                    <input type="number" class="form__input" id="lensFee" step="0.01" value="50.00">
+                </div>
+                <div>
+                    <label>Combo Discount (%)</label>
+                    <input type="number" class="form__input" id="comboDiscount" step="0.1" value="15">
+                </div>
+            </div>
+            <div class="mb-1 admin-space-top">
+                <label>Warranty Policy (Months)</label>
+                <input type="number" class="form__input" id="warrantyMonths" value="12">
+            </div>
+            <h3 class="footer__title admin-space-top-lg">Promotion Rules</h3>
+            <textarea class="form__input" id="promotionRules" rows="4">Buy Frame + Digital Lens -> Get 20% off total frame price.</textarea>
+            <button type="submit" class="btn btn--md admin-space-top">Apply System Changes</button>
+        </form>
+    </div>
+</div>
+
+<script type="module" src="/js/dashboard/modules/system-settings.js"></script>

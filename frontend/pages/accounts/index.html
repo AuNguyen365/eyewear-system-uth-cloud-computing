@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--=============== FLATICON ===============-->
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-straight/css/uicons-regular-straight.css"
+    />
+
+    <!--=============== SWIPER CSS ===============-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+
+    <!--=============== CSS ===============-->
+    <link rel="stylesheet" href="../../assets/css/styles.css" />
+    <link rel="stylesheet" href="../../assets/css/refactor-utils.css" />
+
+    <!--=============== LAYOUT LOADER ===============-->
+    <script src="../../js/core/layout-loader.js" defer></script>
+
+    <title>My Account — EVELENS</title>
+    <link rel="stylesheet" href="../../assets/css/pages/accounts.css" />
+  </head>
+  <body>
+    <!--======= STAFF SIDEBAR (Shows only if layout-staff class present) =======-->
+    <aside class="staff-sidebar-placeholder sidebar" data-include="layout/StaffSidebar"></aside>
+
+    <!--=============== HEADER ===============-->
+    <header class="header" data-include="layout/Header"></header>
+    
+    <!-- Admin Header (Shows only if on staff context) -->
+    <header class="admin-header flex admin-header-placeholder" data-include="layout/AdminHeader"></header>
+
+    <!--=============== MAIN ===============-->
+    <main class="main">
+      
+
+      <!--=============== ACCOUNTS ===============-->
+      <section class="accounts section--lg account-redesign">
+        <div class="accounts__container container grid">
+          <div class="account__tabs">
+            <p class="account__tab active-tab" data-target="#dashboard">
+              <i class="fi fi-rs-settings-sliders"></i><span>Dashboard</span>
+            </p>
+            <p class="account__tab" data-target="#orders">
+              <i class="fi fi-rs-shopping-bag"></i><span>Orders</span>
+            </p>
+            <p class="account__tab" data-target="#support-tickets">
+              <i class="fi fi-rs-envelope"></i><span>Support Tickets</span>
+            </p>
+            <p class="account__tab" data-target="#update-profile">
+              <i class="fi fi-rs-user"></i><span>Update Profile</span>
+            </p>
+            <p class="account__tab" data-target="#address">
+              <i class="fi fi-rs-marker"></i><span>My Address</span>
+            </p>
+            <p class="account__tab" data-target="#change-password">
+              <i class="fi fi-rs-settings-sliders"></i><span>Change Password</span>
+            </p>
+            <p class="account__tab"><i class="fi fi-rs-exit"></i><span>Logout</span></p>
+          </div>
+          <div class="tabs__content">
+            <div class="tab__content active-tab" content id="dashboard">
+              <h3 class="tab__header">Hello Rosie</h3>
+              <div class="tab__body account-dashboard__body">
+                <div class="profile-overview-card">
+                  <div class="profile-overview-main">
+                    <img id="profile-avatar" src="../../assets/images/avatars/avatar-1.jpg" alt="Profile Avatar" class="profile-overview__avatar" />
+                    <div class="profile-overview__identity">
+                      <p class="profile-overview__label">Account Overview</p>
+                      <h4 class="profile-overview__name" id="profile-fullname">Loading...</h4>
+                      <div class="profile-overview__meta-grid">
+                        <p><span>Date of Birth</span><strong id="profile-birthdate">Not set</strong></p>
+                        <p><span>Phone</span><strong id="profile-phone">Not set</strong></p>
+                        <p><span>Email</span><strong id="profile-email">Not set</strong></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <p class="tab__description profile-dashboard__description">
+                  From your account dashboard. you can easily check & view your
+                  recent order, manage your shipping and billing addresses and
+                  edit your password and account details
+                </p>
+              </div>
+            </div>
+            <div class="tab__content" content id="orders">
+              <h3 class="tab__header">Your Orders</h3>
+              <div class="tab__body">
+                <div class="account-table-wrap">
+                  <table class="placed__order-table">
+                    <thead>
+                      <tr>
+                        <th>Order</th>
+                        <th>Date</th>
+                        <th>Total</th>
+                        <th>Payment</th>
+                        <th>Status</th>
+                        <th>Production</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="ordersListBody">
+                      <tr>
+                        <td colspan="7" class="table-state-cell">Loading order tracking...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            
+            <div class="tab__content" content id="support-tickets">
+              <h3 class="tab__header">Support Tickets</h3>
+              <div class="tab__body">
+                <form id="createTicketForm" class="form grid account-panel-form">
+                  <input type="text" id="ticketSubject" placeholder="Subject / Reason" class="form__input" required />
+                  <textarea id="ticketMessage" placeholder="Detailed message..." class="form__input account-textarea" required></textarea>
+                  <button type="submit" class="btn btn--md">Create Ticket</button>
+                </form>
+                
+                <div class="account-table-wrap">
+                  <table class="placed__order-table">
+                    <thead>
+                      <tr>
+                        <th>Subject</th>
+                        <th>Status</th>
+                        <th>Update</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="userTicketsList">
+                      <tr><td colspan="4">Loading tickets...</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="tab__content" content id="update-profile">
+              <h3 class="tab__header">Update Profile</h3>
+              <div class="tab__body account-profile-editor">
+                <div class="profile-editor__intro">
+                  <h4>Personal Details</h4>
+                  <p>Keep your profile updated so orders, support, and delivery information stay accurate.</p>
+                </div>
+                <div class="profile-editor__grid">
+                  <form class="form grid account-panel-form profile-avatar-form" id="avatar-form">
+                    <button type="button" class="profile-avatar-form__preview" id="profile-avatar-trigger" aria-label="Change profile photo">
+                      <img id="profile-editor-avatar" src="../../assets/images/avatars/avatar-1.jpg" alt="Avatar Preview" class="profile-avatar-form__image" />
+                      <span class="profile-avatar-form__badge">Change photo</span>
+                    </button>
+                    <input id="profile-editor-name-input" type="text" class="form__input profile-avatar-form__name-input" placeholder="Enter your full name" />
+                    <input id="avatar-input" type="file" accept="image/png,image/jpeg,image/webp" class="profile-avatar-form__file-input" name="avatar" />
+                    <p class="profile-editor__hint">Click the photo to choose a new avatar.</p>
+                  </form>
+
+                  <form class="form grid profile-details-form" id="profile-form">
+                    <input id="profile-full-name" type="hidden" name="full_name" />
+                    <div class="profile-details-form__group">
+                      <label class="profile-editor__label" for="profile-email-input">Email</label>
+                      <input
+                        id="profile-email-input"
+                        type="email"
+                        placeholder="Email"
+                        class="form__input"
+                        readonly
+                      />
+                    </div>
+                    <div class="profile-details-form__group">
+                      <label class="profile-editor__label" for="profile-birthdate-input">Birthdate</label>
+                      <input
+                        id="profile-birthdate-input"
+                        type="date"
+                        placeholder="Birthdate"
+                        class="form__input"
+                        name="birthdate"
+                      />
+                    </div>
+                  </form>
+                </div>
+                <div class="profile-editor__actions">
+                  <button type="submit" form="profile-form" class="btn btn--md">Save Changes</button>
+                </div>
+              </div>
+            </div>
+            <div class="tab__content" content id="address">
+              <h3 class="tab__header">Shipping Addresses</h3>
+              <div class="tab__body">
+                <div class="address-management">
+                  <div class="address-list" id="address-list">
+                    <!-- Addresses will be injected here -->
+                    <div class="loading-placeholder">Loading your addresses...</div>
+                  </div>
+                  
+                  <button type="button" class="btn btn--md btn--outline add-address-trigger" id="add-new-address-btn">
+                    <i class="fi fi-rs-plus"></i> Add New Address
+                  </button>
+                </div>
+
+                <div class="address-editor-placeholder" data-include="components/modals/address-editor"></div>
+
+              </div>
+            </div>
+            <div class="tab__content" content id="change-password">
+              <h3 class="tab__header">Change Password</h3>
+              <div class="tab__body">
+                <form class="form grid" id="change-password-form">
+                  <input
+                    type="password"
+                    name="current_password"
+                    id="current-password"
+                    placeholder="Current Password"
+                    class="form__input"
+                    required
+                  />
+                  <input
+                    type="password"
+                    name="new_password"
+                    id="new-password"
+                    placeholder="New Password"
+                    class="form__input"
+                    required
+                  />
+                  <input
+                    type="password"
+                    name="confirm_password"
+                    id="confirm-password"
+                    placeholder="Confirm Password"
+                    class="form__input"
+                    required
+                  />
+                  <div class="form__btn">
+                    <button type="submit" class="btn btn--md" id="change-password-btn">Save</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!--=============== NEWSLETTER ===============-->
+      <section class="newsletter section" data-include="components/newsletter"></section>
+    </main>
+
+    <!--=============== FOOTER ===============-->
+    <!--=============== FOOTER ===============-->
+    <footer class="footer container" data-include="layout/Footer"></footer>
+
+    <!--=============== ORDER DETAILS MODAL ===============-->
+    <div id="order-details-modal" class="prescription-modal-overlay">
+        <div class="prescription-modal-content order-details-modal">
+            <div class="modal__header">
+                <h3 class="modal__title">Order Details <span id="modal-order-number">#...</span></h3>
+                <button type="button" class="modal__close" id="close-order-modal">&times;</button>
+            </div>
+            <div class="modal__body" id="order-modal-content">
+                <div class="loading-spinner">Loading...</div>
+            </div>
+        </div>
+    </div>
+
+    <!--=============== SWIPER JS ===============-->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <!--=============== PROFILE JS ===============-->
+    <script type="module" src="../../js/pages/accounts.js"></script>
+
+<!--=============== MAIN JS ===============-->
+    <script src="../../js/main.js"></script>
+  </body>
+</html>
+
+
+

@@ -1,0 +1,27 @@
+﻿.env
+backend/.env
+fe/.env
+/vendor/
+node_modules/
+dist/
+frontend/node_modules/
+frontend/dist/
+
+# Backend logs
+backend/storage/logs/*
+!backend/storage/logs/.gitkeep
+
+# Backend uploads
+backend/storage/uploads/products/*
+!backend/storage/uploads/products/.gitkeep
+backend/storage/uploads/prescriptions/*
+!backend/storage/uploads/prescriptions/.gitkeep
+backend/storage/uploads/avatars/*
+!backend/storage/uploads/avatars/.gitkeep
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+backend/.env.local

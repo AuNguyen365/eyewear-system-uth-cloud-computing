@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--=============== FLATICON ===============-->
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-straight/css/uicons-regular-straight.css"
+    />
+
+    <!--=============== SWIPER CSS ===============-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+
+    <!--=============== CSS ===============-->
+    <link rel="stylesheet" href="../../assets/css/styles.css" />
+    <link rel="stylesheet" href="../../assets/css/refactor-utils.css" />
+
+    <!--=============== LAYOUT LOADER ===============-->
+    <script src="../../js/core/layout-loader.js" defer></script>
+
+    <link rel="stylesheet" href="../../assets/css/pages/details.css" />
+
+    <title>EVELENS — Details</title>
+  </head>
+  <body>
+    <!--=============== PRESCRIPTION MODAL ===============-->
+    <div id="prescription-modal" class="prescription-modal-overlay" style="display: none;">
+        <div class="prescription-modal-content">
+            <h2 class="section__title" style="margin-bottom: 1rem;">Prescription Details</h2>
+            <form id="prescription-form">
+                <div class="prescription-grid">
+                    <div></div>
+                    <div class="prescription-grid-header">SPH</div>
+                    <div class="prescription-grid-header">CYL</div>
+                    <div class="prescription-grid-header">Axis</div>
+                    
+                    <div style="font-weight:bold">Right</div>
+                    <input type="number" step="0.25" name="sph_od" class="prescription-input" value="0.00">
+                    <input type="number" step="0.25" name="cyl_od" class="prescription-input" value="0.00">
+                    <input type="number" name="axis_od" class="prescription-input" value="0">
+                    
+                    <div style="font-weight:bold">Left</div>
+                    <input type="number" step="0.25" name="sph_os" class="prescription-input" value="0.00">
+                    <input type="number" step="0.25" name="cyl_os" class="prescription-input" value="0.00">
+                    <input type="number" name="axis_os" class="prescription-input" value="0">
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display:block;margin-bottom:5px">Pupillary Distance (PD)</label>
+                    <input type="number" name="pd" class="prescription-input" style="padding:8px" value="63">
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" class="btn btn--secondary" onclick="window.closePrescriptionModal()" style="flex: 1;">Cancel</button>
+                    <button type="submit" class="btn" style="flex: 1;">Save Details</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Global functions for the modal
+        window.openPrescriptionModal = function() {
+            const modal = document.getElementById('prescription-modal');
+            if (modal) {
+                modal.style.setProperty('display', 'flex', 'important');
+                // Small delay to trigger CSS transition
+                setTimeout(() => modal.classList.add('show'), 10);
+            }
+        };
+        window.closePrescriptionModal = function() {
+            const modal = document.getElementById('prescription-modal');
+            if (modal) {
+                modal.classList.remove('show');
+                setTimeout(() => modal.style.display = 'none', 300);
+            }
+        };
+        window.prescriptionData = null;
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('prescription-form');
+            if(form) {
+                form.onsubmit = (e) => {
+                    e.preventDefault();
+                    const fd = new FormData(form);
+                    window.prescriptionData = Object.fromEntries(fd.entries());
+                    const status = document.getElementById('prescription-status');
+                    if(status) status.textContent = '✓ Saved';
+                    window.closePrescriptionModal();
+                };
+            }
+        });
+    </script>
+    <!--=============== HEADER ===============-->
+    <!--=============== HEADER ===============-->
+    <header class="header" data-include="layout/Header"></header>
+
+    <!--=============== MAIN ===============-->
+    <main class="main">
+      
+
+      <!--=============== DETAILS ===============-->
+      <section class="details section--lg">
+        <div class="details__container container grid" id="details-container">
+          <div class="details__group">
+            <img
+              src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+              alt=""
+              id="details-main-img"
+              class="details__img skeleton skeleton-img"
+            />
+            <div class="details__small-images grid" id="details-gallery">
+              <img
+                src="../../assets/images/products/frame-an-03.png"
+                alt=""
+                class="details__small-img"
+              />
+              <img
+                src="../../assets/images/products/frame-an-03.png"
+                alt=""
+                class="details__small-img"
+              />
+              <img
+                src="../../assets/images/products/frame-an-06.png"
+                alt=""
+                class="details__small-img"
+              />
+            </div>
+          </div>
+          <div class="details__group">
+            <h3 id="details-title" class="details__title skeleton skeleton-title">&nbsp;</h3>
+            <p class="details__brand skeleton-brand">Brand: <span id="details-brand" class="skeleton">&nbsp;</span></p>
+            <div class="details__price flex">
+              <span class="new__price skeleton-price" id="price-current">&nbsp;</span>
+              <span class="old__price skeleton-price" id="price-old">&nbsp;</span>
+              <span class="save__price skeleton-price" id="price-discount">&nbsp;</span>
+            </div>
+            <div class="order-type-selector details-order-type" id="preorder-banner" style="display: none;">
+                <div style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: linear-gradient(135deg, #fff3e0, #ffe0b2); border-radius: 12px; border: 1px solid #ffcc80;">
+                    <i class="fi fi-rs-clock" style="font-size: 20px; color: #e65100;"></i>
+                    <div>
+                        <strong style="color: #e65100; font-size: 13px;">Pre-order Available</strong>
+                        <p style="margin: 2px 0 0; font-size: 11px; color: #bf360c;">This variant is currently out of stock. Estimated delivery: 10–14 business days after order confirmation.</p>
+                    </div>
+                </div>
+            </div>
+            <p class="short__description">
+                Choose a color and size variant, then select lens package if needed. Price updates instantly based on your configuration.
+            </p>
+            <ul class="products__list">
+              <li class="list__item flex">
+                <i class="fi-rs-crown"></i> 1 Year Al Jazeera Brand Warranty
+              </li>
+              <li class="list__item flex">
+                <i class="fi-rs-refresh"></i> 30 Days Return Policy
+              </li>
+              <li class="list__item flex">
+                <i class="fi-rs-credit-card"></i> Cash on Delivery available
+              </li>
+            </ul>
+            <div class="details__color flex">
+              <span class="details__color-title">Color</span>
+              <ul class="color__list" id="variant-colors">
+                <li>
+                  <a
+                    href="#"
+                    class="color__link color-swatch--amber"
+                    data-color="Tortoise"
+                    data-additional="0"
+                  ></a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    class="color__link color-swatch--crimson"
+                    data-color="Crimson"
+                    data-additional="8"
+                  ></a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    class="color__link color-swatch--gold"
+                    data-color="Gold"
+                    data-additional="14"
+                  ></a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    class="color__link color-swatch--rose"
+                    data-color="Rose"
+                    data-additional="6"
+                  ></a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    class="color__link color-swatch--emerald"
+                    data-color="Emerald"
+                    data-additional="10"
+                  ></a>
+                </li>
+              </ul>
+            </div>
+            <div class="details__size flex">
+              <span class="details__size-title">Size</span>
+              <ul class="size__list" id="variant-sizes">
+                <li>
+                  <a href="#" class="size__link size-active" data-size="M" data-additional="0">M</a>
+                </li>
+                <li>
+                  <a href="#" class="size__link" data-size="L" data-additional="12">L</a>
+                </li>
+                <li>
+                  <a href="#" class="size__link" data-size="XL" data-additional="18">XL</a>
+                </li>
+                <li>
+                  <a href="#" class="size__link" data-size="XXL" data-additional="24">XXL</a>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Lens Specialist Info (Shown for Category 3) -->
+            <div class="lens-specialist-info" id="lens-specialist-ui">
+              <h3 class="lens-specialist__title"><i class="fi fi-rs-interrogation"></i> Professional Installation</h3>
+              <p class="lens-specialist__desc">
+                To have these lenses professionally mounted for <strong>FREE</strong>, please also add any <strong>Frame</strong> from our collection to your cart. 
+                Our experts will verify your prescription and build your glasses within 24 hours.
+              </p>
+              <a href="../shop/?category=1" class="lens-specialist__action">Browse Frames <i class="fi fi-rs-arrow-right"></i></a>
+            </div>
+
+            <div class="details-lens-group" id="lens-selection-ui">
+              <span class="details__size-title details-lens-title">Step 2: Choose Lens Package</span>
+              <p class="details-lens-guide"><i class="fi fi-rs-info"></i> Select a lens to have it professionally mounted to this frame for free.</p>
+              
+              <div id="lens-cards-container" class="lens-cards-grid">
+                <!-- Dynamically populated VIP cards -->
+                <p class="loading-text">Loading premium lens options...</p>
+              </div>
+
+              <!-- Keep hidden select for fallback/data compatibility -->
+              <select id="lens-package" style="display: none;">
+                <option value="">Frame only</option>
+              </select>
+
+              <div id="prescription-toggle-container" style="display: none; margin-top: 1rem; position: relative; z-index: 999;">
+                  <button type="button" id="force-open-pres" class="btn btn--sm">
+                      <i class="fi fi-rs-clipboard-list"></i> Enter Prescription Details
+                  </button>
+                  <span id="prescription-status" class="prescription-status"></span>
+              </div>
+            </div>
+
+            <div class="details-price-box">
+              <p class="details-price-box__title">Price Breakdown</p>
+              <p class="details-price-box__line" id="price-line-base">Base price: <strong id="line-base">$0.00</strong></p>
+              <p class="details-price-box__line" id="price-line-variant">Variant add-on: <strong id="line-variant">$0.00</strong></p>
+              <p class="details-price-box__line" id="price-line-lens">Lens package: <strong id="line-lens">$0.00</strong></p>
+              <p class="details-price-box__line">Quantity: <strong id="line-qty">1</strong></p>
+              <p class="details-price-box__total">Estimated total: <span id="line-total">$0.00</span></p>
+            </div>
+
+            <div class="details__action">
+              <input type="number" class="eyewear-quantity-input" id="quantity-input" value="1" min="1" max="10" />
+              <a href="#" id="add-to-cart-btn" class="btn-eyewear-action btn-cart-animate">
+                <i class="fi fi-rs-shopping-bag"></i>
+                <span class="btn-text">Add to Cart</span>
+                <i class="fi fi-rs-glasses falling-item"></i>
+              </a>
+              <a href="#" class="btn-eyewear-secondary btn-tryon">Virtual Try-On</a>
+              <a href="#" class="btn-eyewear-wishlist" title="Add to Wishlist">
+                <i class="fi fi-rs-heart"></i>
+              </a>
+            </div>
+            <ul class="details__meta">
+              <li class="meta__list flex"><span>SKU:</span><span id="variant-sku">EYC-ACETATE-M-TOR</span></li>
+              <li class="meta__list flex">
+                <span>Tags:</span>Optical, Premium, Acetate
+              </li>
+              <li class="meta__list flex">
+                <span>Availability:</span><span id="variant-stock">8 Items in Stock</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!--=============== DETAILS TAB ===============-->
+      <section class="details__tab container">
+        <div class="detail__tabs">
+          <span class="detail__tab active-tab" data-target="#info">
+            Additional Info
+          </span>
+        </div>
+        <div class="details__tabs-content">
+          <div class="details__tab-content active-tab" content id="info">
+            <table class="info__table" id="info-table">
+              <tr>
+                <th>Stand Up</th>
+                <td>35" L x 24"W x 37-45"H(front to back wheel)</td>
+              </tr>
+              <tr>
+                <th>Folded (w/o wheels)</th>
+                <td>32.5"L x 18.5"W x 16.5"H</td>
+              </tr>
+              <tr>
+                <th>Folded (w/o wheels)</th>
+                <td>32.5"L x 24"W x 18.5"H</td>
+              </tr>
+              <tr>
+                <th>Door Pass THrough</th>
+                <td>24</td>
+              </tr>
+              <tr>
+                <th>Frame</th>
+                <td>Aluminum</td>
+              </tr>
+              <tr>
+                <th>Weight (w/o wheels)</th>
+                <td>20 LBS</td>
+              </tr>
+              <tr>
+                <th>Weight Capacity</th>
+                <td>60 LBS</td>
+              </tr>
+              <tr>
+                <th>Width</th>
+                <td>24</td>
+              </tr>
+              <tr>
+                <th>Handle Height (ground to handle)</th>
+                <td>37-45</td>
+              </tr>
+              <tr>
+                <th>Wheels</th>
+                <td>12" air / wide track slick tread</td>
+              </tr>
+              <tr>
+                <th>Seat back height</th>
+                <td>21.5</td>
+              </tr>
+              <tr>
+                <th>Head Room(inside canopy)</th>
+                <td>25"</td>
+              </tr>
+              <tr>
+                <th>Color</th>
+                <td>Black, Blue, Red, White</td>
+              </tr>
+              <tr>
+                <th>Size</th>
+                <td>M, S</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!--=============== PRODUCTS ===============-->
+      <section class="products container section--lg">
+        <h3 class="section__title"><span>Related</span> Products</h3>
+        <div class="products__container grid" id="related-products">
+          <div class="product__item">
+            <div class="product__banner">
+              <a href="../details/" class="product__images">
+                <img
+                  src="../../assets/images/products/frame-an-03.png"
+                  alt=""
+                  class="product__img default"
+                />
+                <img
+                  src="../../assets/images/products/frame-an-03.png"
+                  alt=""
+                  class="product__img hover"
+                />
+              </a>
+              <div class="product__actions">
+                <a href="#" class="action__btn" aria-label="Quick View">
+                  <i class="fi fi-rs-eye"></i>
+                </a>
+                <a
+                  href="#"
+                  class="action__btn"
+                  aria-label="Add to Wishlist"
+                >
+                  <i class="fi fi-rs-heart"></i>
+                </a>
+                <a href="#" class="action__btn" aria-label="Compare">
+                  <i class="fi fi-rs-shuffle"></i>
+                </a>
+              </div>
+              <div class="product__badge light-pink">Hot</div>
+            </div>
+            <div class="product__content">
+              <span class="product__category">Eyewear</span>
+              <a href="../details/">
+                <h3 class="product__title">Colorful Pattern Frames</h3>
+              </a>
+              <div class="product__rating">
+                <i class="fi fi-rs-star"></i>
+                <i class="fi fi-rs-star"></i>
+                <i class="fi fi-rs-star"></i>
+                <i class="fi fi-rs-star"></i>
+                <i class="fi fi-rs-star"></i>
+              </div>
+              <div class="product__price flex">
+                <span class="new__price">$238.85</span>
+                <span class="old__price">$245.8</span>
+              </div>
+              <a
+                href="#"
+                class="action__btn cart__btn"
+                aria-label="Add To Cart"
+              >
+                <i class="fi fi-rs-shopping-bag-add"></i>
+              </a>
+            </div>
+          </div>
+          <div class="product__item">
+            <div class="product__banner">
+              <a href="../details/" class="product__images">
+                <img
+                  src="../../assets/images/products/frame-an-03.png"
+                  alt=""
+                  class="product__img default"
+                />
+                <img
+                  src="../../assets/images/products/frame-an-03.png"
+                  alt=""
+                  class="product__img hover"
+                />
+              </a>
+              <div class="product__actions">
+                <a href="#" class="action__btn" aria-label="Quick View">
+                  <i class="fi fi-rs-eye"></i>
+                </a>
+                <a
+                  href="#"
+                  class="action__btn"
+                  aria-label="Add to Wishlist"
+                >
+                  <i class="fi fi-rs-heart"></i>
+                </a>
+                <a href="#" class="action__btn" aria-label="Compare">
+                  <i class="fi fi-rs-shuffle"></i>
+                </a>
+              </div>
+              <div class="product__badge light-green">Hot</div>
+            </div>
+            <div class="product__content">
+              <span class="product__category">Eyewear</span>
+              <a href="../details/">
+                <h3 class="product__title">Colorful Pattern Frames</h3>
+              </a>
+              <div class="product__rating">
+                <i class="fi fi-rs-star"></i>
+                <i class="fi fi-rs-star"></i>
+                <i class="fi fi-rs-star"></i>
+                <i class="fi fi-rs-star"></i>
+                <i class="fi fi-rs-star"></i>
+              </div>
+              <div class="product__price flex">
+                <span class="new__price">$238.85</span>
+                <span class="old__price">$245.8</span>
+              </div>
+              <a
+                href="#"
+                class="action__btn cart__btn"
+                aria-label="Add To Cart"
+              >
+                <i class="fi fi-rs-shopping-bag-add"></i>
+              </a>
+            </div>
+          </div>
+          <div class="product__item">
+            <div class="product__banner">
+              <a href="../details/" class="product__images">
+                <img
+                  src="../../assets/images/products/frame-an-03.png"
+                  alt=""
+                  class="product__img default"
+                />
+                <img
+                  src="../../assets/images/products/frame-an-03.png"
+                  alt=""
+                  class="product__img hover"
+                />
+              </a>
+              <div class="product__actions">
+                <a href="#" class="action__btn" aria-label="Quick View">
+                  <i class="fi fi-rs-eye"></i>
+                </a>
+                <a
+                  href="#"
+                  class="action__btn"
+                  aria-label="Add to Wishlist"
+                >
+                  <i class="fi fi-rs-heart"></i>
+                </a>
+                <a href="#" class="action__btn" aria-label="Compare">
+                  <i class="fi fi-rs-shuffle"></i>
+                </a>
+              </div>
+              <div class="product__badge light-orange">Hot</div>
+            </div>
+            <div class="product__content">
+              <span class="product__category">Eyewear</span>
+              <a href="../details/">
+                <h3 class="product__title">Colorful Pattern Frames</h3>
+              </a>
+              <div class="product__rating">
+                <i class="fi fi-rs-star"></i>
+                <i class="fi fi-rs-star"></i>
+                <i class="fi fi-rs-star"></i>
+                <i class="fi fi-rs-star"></i>
+                <i class="fi fi-rs-star"></i>
+              </div>
+              <div class="product__price flex">
+                <span class="new__price">$238.85</span>
+                <span class="old__price">$245.8</span>
+              </div>
+              <a
+                href="#"
+                class="action__btn cart__btn"
+                aria-label="Add To Cart"
+              >
+                <i class="fi fi-rs-shopping-bag-add"></i>
+              </a>
+            </div>
+          </div>
+          <div class="product__item">
+            <div class="product__banner">
+              <a href="../details/" class="product__images">
+                <img
+                  src="../../assets/images/products/frame-an-03.png"
+                  alt=""
+                  class="product__img default"
+                />
+                <img
+                  src="../../assets/images/products/frame-an-03.png"
+                  alt=""
+                  class="product__img hover"
+                />
+              </a>
+              <div class="product__actions">
+                <a href="#" class="action__btn" aria-label="Quick View">
+                  <i class="fi fi-rs-eye"></i>
+                </a>
+                <a
+                  href="#"
+                  class="action__btn"
+                  aria-label="Add to Wishlist"
+                >
+                  <i class="fi fi-rs-heart"></i>
+                </a>
+                <a href="#" class="action__btn" aria-label="Compare">
+                  <i class="fi fi-rs-shuffle"></i>
+                </a>
+              </div>
+              <div class="product__badge light-blue">Hot</div>
+            </div>
+            <div class="product__content">
+              <span class="product__category">Eyewear</span>
+              <a href="../details/">
+                <h3 class="product__title">Colorful Pattern Frames</h3>
+              </a>
+              <div class="product__rating">
+                <i class="fi fi-rs-star"></i>
+                <i class="fi fi-rs-star"></i>
+                <i class="fi fi-rs-star"></i>
+                <i class="fi fi-rs-star"></i>
+                <i class="fi fi-rs-star"></i>
+              </div>
+              <div class="product__price flex">
+                <span class="new__price">$238.85</span>
+                <span class="old__price">$245.8</span>
+              </div>
+              <a
+                href="#"
+                class="action__btn cart__btn"
+                aria-label="Add To Cart"
+              >
+                <i class="fi fi-rs-shopping-bag-add"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!--=============== NEWSLETTER ===============-->
+      <section class="newsletter section" data-include="components/newsletter"></section>
+    </main>
+
+    <!--=============== FOOTER ===============-->
+    <footer class="footer container" data-include="layout/Footer"></footer>
+
+    <!--=============== SWIPER JS ===============-->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <!--=============== MAIN JS ===============-->
+    <script src="../../js/main.js"></script>
+    <script type="module">
+      import apiClient from '../../js/services/apiClient.js';
+      import CartService from '../../js/services/cartService.js';
+      import WishlistService from '../../js/services/wishlistService.js';
+
+      document.addEventListener('DOMContentLoaded', async () => {
+        const params = new URLSearchParams(window.location.search);
+        let productId = params.get("id") || "1";
+
+        const titleEl = document.getElementById("details-title");
+        const brandEl = document.getElementById("details-brand");
+        const breadcrumbEl = document.getElementById("breadcrumb-product");
+        const mainImageEl = document.getElementById("details-main-img");
+        const descEl = document.querySelector(".short__description");
+        const galleryEl = document.getElementById("details-gallery");
+        const infoTable = document.getElementById("info-table");
+        const relatedEl = document.getElementById("related-products");
+
+        const colorContainer = document.getElementById("variant-colors");
+        const sizeContainer = document.getElementById("variant-sizes");
+        const lensSelect = document.getElementById("lens-package");
+        const quantityInput = document.getElementById("quantity-input");
+        const addToCartBtn = document.getElementById("add-to-cart-btn");
+
+        const ui = {
+          priceCurrent: document.getElementById("price-current"),
+          priceOld: document.getElementById("price-old"),
+          priceDiscount: document.getElementById("price-discount"),
+          lineBase: document.getElementById("line-base"),
+          lineVariant: document.getElementById("line-variant"),
+          lineLens: document.getElementById("line-lens"),
+          lineQty: document.getElementById("line-qty"),
+          lineTotal: document.getElementById("line-total"),
+          variantSku: document.getElementById("variant-sku"),
+          variantStock: document.getElementById("variant-stock")
+        };
+
+        const format = window.formatVND || (val => val + ' VND');
+
+        let product = null;
+        let selectedVariant = null;
+
+        try {
+            const res = await apiClient.get('/products/' + productId);
+            product = res.data?.data;
+            if(!product) throw new Error("Product not found");
+
+            // Clear skeletons and show content
+            document.querySelectorAll('.skeleton').forEach(el => el.classList.remove('skeleton', 'skeleton-title', 'skeleton-brand', 'skeleton-price', 'skeleton-img'));
+            document.getElementById('details-container')?.classList.add('is-ready');
+
+            // Handle Lens Product Special UI (Category 3 is Lenses)
+            const catId = product.category?.id || product.category_id;
+            if (catId == 3) {
+                document.getElementById('details-container')?.classList.add('is-lens-product');
+            }
+            
+            // Handle Sunglasses (Category 2) - Hide Lens Selection
+            if (catId == 2) {
+                const lensUI = document.getElementById('lens-selection-ui');
+                if (lensUI) lensUI.style.display = 'none';
+                const orderTypeUI = document.querySelector('.details-order-type');
+                if (orderTypeUI) orderTypeUI.style.display = 'none';
+            }
+        } catch(e) {
+            console.error("Failed to fetch product", e);
+            alert("Product not found or connection error.");
+            return;
+        }
+
+        // Render Product Info
+        titleEl.textContent = product.name;
+        brandEl.textContent = product.brand;
+        if(breadcrumbEl) breadcrumbEl.textContent = product.name;
+        document.title = `${product.name} — EVELENS`;
+        if(descEl) descEl.textContent = product.description || 'Experience the perfect blend of style and clarity with our premium handcrafted frames.';        // Render Specs Table & UI Customization
+        if(infoTable) {
+            const catId = product.category?.id || product.category_id;
+            if (catId == 3 && product.lens_details) {
+                infoTable.innerHTML = `
+                    <tr><th>Brand</th><td>${product.brand || 'EVELENS'}</td></tr>
+                    <tr><th>Lens Type</th><td>${product.lens_details.lens_type}</td></tr>
+                    <tr><th>Vision Type</th><td>${product.lens_details.type.replace('_', ' ')}</td></tr>
+                    <tr><th>Material</th><td>${product.lens_details.material}</td></tr>
+                    <tr><th>Refractive Index</th><td>${product.lens_details.index_value}</td></tr>
+                    <tr><th>Coating</th><td>${product.lens_details.coating}</td></tr>
+                `;
+                
+                // Customize Price Labels for Lenses
+                const baseLabel = document.getElementById('price-line-base');
+                if(baseLabel) baseLabel.innerHTML = `Lens price (pair): <strong id="line-base">${format(product.base_price)}</strong>`;
+                
+                const variantLabel = document.getElementById('price-line-variant');
+                if(variantLabel) variantLabel.style.display = 'none';
+
+                const lensLabel = document.getElementById('price-line-lens');
+                if(lensLabel) lensLabel.style.display = 'none';
+
+                // Show prescription button for lenses
+                const presContainer = document.getElementById('prescription-toggle-container');
+                if(presContainer) presContainer.style.display = 'block';
+            } else {
+                const uniqueColors = [...new Set(product.variants.map(v => v.color).filter(Boolean))];
+                const uniqueSizes = [...new Set(product.variants.map(v => v.size).filter(Boolean))];
+                infoTable.innerHTML = `
+                    <tr><th>Brand</th><td>${product.brand || 'EVELENS'}</td></tr>
+                    <tr><th>Model Name</th><td>${product.model_name || 'N/A'}</td></tr>
+                    <tr><th>Product Code</th><td>${product.slug.toUpperCase()}</td></tr>
+                    <tr><th>Bridge Width</th><td>18mm - 22mm</td></tr>
+                    <tr><th>Temple Length</th><td>140mm - 145mm</td></tr>
+                    <tr><th>Available Colors</th><td>${uniqueColors.join(', ')}</td></tr>
+                    <tr><th>Available Sizes</th><td>${uniqueSizes.join(', ')}</td></tr>
+                `;
+            }
+        }
+
+        // --- RELATED PRODUCTS ---
+        const fixImagePath = (path) => {
+            if (!path) return '../../assets/images/products/placeholder.png';
+            if (path.startsWith('http')) return path;
+            const clean = path.startsWith('/') ? path.substring(1) : path;
+            return '../../' + clean;
+        };
+
+        if(relatedEl) {
+            try {
+                const rRes = await apiClient.get('/products/related', {
+                    params: { exclude_id: productId, limit: 4 }
+                });
+                const related = rRes.data?.data || [];
+
+                if(related.length > 0) {
+                    let wlIds = [];
+                    try {
+                        const wl = await WishlistService.getWishlist();
+                        wlIds = (wl.data || []).map(i => i.product_id);
+                    } catch(e) {}
+
+                    const badgeColors = ['light-pink', 'light-blue', 'light-orange', 'light-green'];
+                    relatedEl.innerHTML = related.map((p, idx) => {
+                        const img = fixImagePath(p.thumbnail);
+                        const isW = wlIds.includes(p.id);
+                        const price = parseFloat(p.base_price || 0);
+                        return `
+                            <div class="product__item">
+                                <a href="index.html?id=${p.id}" class="product__item__overlay-link"></a>
+                                <div class="product__banner">
+                                    <a href="index.html?id=${p.id}" class="product__images">
+                                        <img src="${img}" alt="${p.name}" class="product__img default" onerror="this.src='../../assets/images/products/placeholder.png'">
+                                        <img src="${img}" alt="${p.name}" class="product__img hover" onerror="this.src='../../assets/images/products/placeholder.png'">
+                                    </a>
+                                    <div class="product__actions">
+                                        <button class="action__btn" aria-label="Quick View" data-action="quick-view" data-product-id="${p.id}">
+                                            <i class="fi fi-rs-eye"></i>
+                                        </button>
+                                        <button class="action__btn ${isW ? 'wishlist-active' : ''}" aria-label="Wishlist" data-action="toggle-wishlist" data-product-id="${p.id}">
+                                            <i class="${isW ? 'fi fi-ss-heart' : 'fi fi-rs-heart'}"></i>
+                                        </button>
+                                    </div>
+                                    <div class="product__badge ${badgeColors[idx % 4]}">Hot</div>
+                                </div>
+                                <div class="product__content">
+                                    <span class="product__category">${p.brand || 'Luxury'}</span>
+                                    <a href="index.html?id=${p.id}"><h3 class="product__title">${p.name}</h3></a>
+                                    <div class="product__rating">
+                                        <i class="fi fi-rs-star"></i><i class="fi fi-rs-star"></i><i class="fi fi-rs-star"></i><i class="fi fi-rs-star"></i><i class="fi fi-rs-star"></i>
+                                    </div>
+                                    <div class="product__price flex">
+                                        <span class="new__price">${format(price)}</span>
+                                        <span class="old__price">${format(price * 1.2)}</span>
+                                    </div>
+                                    <button class="action__btn cart__btn" aria-label="Add To Cart" data-action="add-to-cart" data-variant-id="${p.first_variant_id || p.id}">
+                                        <i class="fi fi-rs-shopping-bag-add"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    relatedEl.closest('section').style.display = 'none';
+                }
+            } catch(e) {
+                console.error("Related Products Error:", e);
+            }
+        }
+
+        // Render Gallery
+        if(galleryEl) {
+            const images = [...new Set(product.variants.map(v => v.image_2d_url).filter(Boolean))];
+            galleryEl.innerHTML = images.map(img => {
+                let fullImg = img.startsWith('/') ? '../../..' + img : img;
+                return `<img src="${fullImg}" alt="${product.name}" class="details__small-img" onclick="document.getElementById('details-main-img').src=this.src">`;
+            }).join('');
+        }
+
+        // Render Variants
+        const colors = {};
+        const sizes = {};
+        product.variants.forEach(v => {
+            if(!colors[v.color]) colors[v.color] = [];
+            colors[v.color].push(v);
+            if(!sizes[v.size]) sizes[v.size] = [];
+            sizes[v.size].push(v);
+        });
+
+        colorContainer.innerHTML = '';
+        Object.keys(colors).forEach((color, idx) => {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = '#';
+            a.className = 'color__link ' + (idx === 0 ? 'active' : '');
+            a.dataset.color = color;
+            a.style.backgroundColor = color.toLowerCase().includes('gold') ? 'gold' : color.toLowerCase().includes('black') ? 'black' : color.toLowerCase().includes('silver') ? 'silver' : 'grey';
+            if(idx === 0) a.dataset.active = "1";
+            li.appendChild(a);
+            colorContainer.appendChild(li);
+        });
+
+        sizeContainer.innerHTML = '';
+        Object.keys(sizes).forEach((size, idx) => {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = '#';
+            a.className = 'size__link ' + (idx === 0 ? 'size-active' : '');
+            a.dataset.size = size;
+            a.innerText = size;
+            li.appendChild(a);
+            sizeContainer.appendChild(li);
+        });
+
+        function updatePricing() {
+          if (!product || !addToCartBtn) return;
+          const color = colorContainer.querySelector('.color__link[data-active="1"]')?.dataset.color;
+          const size = sizeContainer.querySelector('.size-active')?.dataset.size;
+
+          selectedVariant = product.variants.find(v => v.color === color && v.size === size) || product.variants.find(v => v.color === color) || product.variants[0];
+
+          let img = selectedVariant.image_2d_url || '../../assets/images/products/placeholder.png';
+          if(img.startsWith('/')) img = '../../..' + img;
+          mainImageEl.src = img;
+
+          const basePrice = parseFloat(product.base_price);
+          const variantFee = parseFloat(selectedVariant.additional_price || 0);
+          const opt = lensSelect.options[lensSelect.selectedIndex];
+          const lensFee = opt && opt.value ? parseFloat(opt.dataset.price) : 0;
+          
+          const maxStock = parseInt(selectedVariant.stock_quantity || 0);
+          let qty = parseInt(quantityInput.value) || 1;
+          qty = Math.max(1, Math.min(qty, maxStock > 0 ? maxStock : 1, 10));
+          quantityInput.value = qty;
+
+          const unitPrice = basePrice + variantFee + lensFee;
+          const productOnlyPrice = basePrice + variantFee;
+          const total = unitPrice * qty;
+          const oldPrice = productOnlyPrice * 1.2;
+
+          if(ui.priceCurrent) ui.priceCurrent.textContent = format(productOnlyPrice);
+          if(ui.priceOld) ui.priceOld.textContent = format(oldPrice);
+          if(ui.priceDiscount) ui.priceDiscount.textContent = `Save ${format(oldPrice - productOnlyPrice)}`;
+          if(ui.lineBase) ui.lineBase.textContent = format(basePrice);
+          if(ui.lineVariant) ui.lineVariant.textContent = format(variantFee);
+          if(ui.lineLens) ui.lineLens.textContent = format(lensFee);
+          if(ui.lineQty) ui.lineQty.textContent = qty;
+          if(ui.lineTotal) ui.lineTotal.textContent = format(total);
+          if(ui.variantSku) ui.variantSku.textContent = selectedVariant.sku;
+          
+          const preorderBanner = document.getElementById('preorder-banner');
+          if (maxStock <= 0) {
+              // Out of stock → show pre-order option
+              if(ui.variantStock) ui.variantStock.textContent = `Out of Stock — Pre-order Available`;
+              if(ui.variantStock) ui.variantStock.style.color = '#e65100';
+              addToCartBtn.style.pointerEvents = 'auto';
+              addToCartBtn.style.opacity = '1';
+              addToCartBtn.querySelector('.btn-text').textContent = 'Pre-order Now';
+              addToCartBtn.dataset.preorder = 'true';
+              if(preorderBanner) preorderBanner.style.display = 'block';
+          } else {
+              // In stock → normal purchase
+              if(ui.variantStock) ui.variantStock.textContent = `${maxStock} items in stock`;
+              if(ui.variantStock) ui.variantStock.style.color = '';
+              addToCartBtn.style.pointerEvents = 'auto';
+              addToCartBtn.style.opacity = '1';
+              addToCartBtn.querySelector('.btn-text').textContent = 'Add to Cart';
+              delete addToCartBtn.dataset.preorder;
+              if(preorderBanner) preorderBanner.style.display = 'none';
+          }
+        }
+
+        colorContainer.addEventListener("click", (e) => {
+            if(e.target.tagName === 'A') {
+                e.preventDefault();
+                colorContainer.querySelectorAll('.color__link').forEach(el => { el.dataset.active = "0"; el.style.boxShadow = "none"; });
+                e.target.dataset.active = "1";
+                e.target.style.boxShadow = "0 0 0 2px #ffffff, 0 0 0 4px var(--first-color)";
+                updatePricing();
+            }
+        });
+
+        sizeContainer.addEventListener("click", (e) => {
+            if(e.target.tagName === 'A') {
+                e.preventDefault();
+                sizeContainer.querySelectorAll('.size__link').forEach(el => el.classList.remove('size-active'));
+                e.target.classList.add('size-active');
+                updatePricing();
+            }
+        });
+
+        lensSelect.addEventListener("change", updatePricing);
+        quantityInput.addEventListener("input", updatePricing);        // --- PRESCRIPTION MODAL LOGIC ---
+        const prescriptionModal = document.getElementById('prescription-modal');
+        const openPrescriptionBtn = document.getElementById('force-open-pres');
+        const closePrescriptionBtn = document.getElementById('close-prescription-modal');
+        const prescriptionForm = document.getElementById('prescription-form');
+        const prescriptionToggle = document.getElementById('prescription-toggle-container');
+        const prescriptionStatus = document.getElementById('prescription-status');
+
+        let prescriptionData = null;
+
+        if (openPrescriptionBtn) {
+            openPrescriptionBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.openPrescriptionModal();
+            });
+        }
+        
+        if (closePrescriptionBtn) {
+            closePrescriptionBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                prescriptionModal.classList.remove('active');
+            });
+        }
+
+        prescriptionForm?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const fd = new FormData(prescriptionForm);
+            window.prescriptionData = Object.fromEntries(fd.entries());
+            if (prescriptionStatus) prescriptionStatus.textContent = '✓ Saved';
+            window.closePrescriptionModal();
+        });
+
+        // Prescription Visibility Logic
+        function updatePrescriptionVisibility() {
+            const hasLens = lensSelect && lensSelect.value !== "";
+            const catId = product?.category?.id || product?.category_id;
+            
+            if (prescriptionToggle) {
+                // Show if it's a frame with a lens selected, OR if it's a standalone lens product
+                if ((catId == 1 && hasLens) || catId == 3) {
+                    prescriptionToggle.style.display = 'block';
+                } else {
+                    prescriptionToggle.style.display = 'none';
+                }
+            }
+        }
+
+        // --- ADD TO CART LOGIC ---
+        if(addToCartBtn) {
+            addToCartBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                if (!selectedVariant || addToCartBtn.classList.contains('animating')) return;
+
+                // Auto-detect order type based on stock and lens selection
+                const isPreorder = addToCartBtn.dataset.preorder === 'true';
+                let orderType = isPreorder ? 'preorder' : 'instock';
+                
+                // If a lens is selected, it's automatically a prescription order
+                if (lensSelect && lensSelect.value !== "") {
+                    orderType = 'prescription';
+                }
+
+                // Intercept if it's a standalone lens product
+                const catId = product.category?.id || product.category_id;
+                if (catId == 3 && !e.target.dataset.confirmed) {
+                    const confirmModal = document.getElementById('lens-confirm-modal');
+                    if (confirmModal) {
+                        confirmModal.querySelector('strong').textContent = product.name;
+                        confirmModal.classList.add('show');
+                        
+                        // Handle "Continue Anyway"
+                        document.getElementById('confirm-add-lens').onclick = () => {
+                            confirmModal.classList.remove('show');
+                            addToCartBtn.dataset.confirmed = "true";
+                            addToCartBtn.click(); // Trigger again
+                            delete addToCartBtn.dataset.confirmed;
+                        };
+                        return;
+                    }
+                }
+
+                // Prescription is optional, don't block adding to cart
+                
+                addToCartBtn.classList.add('animating');
+                try {
+                    await CartService.addToCart({ 
+                        variant_id: selectedVariant.id, 
+                        lens_id: lensSelect?.value ? parseInt(lensSelect.value) : null, 
+                        quantity: parseInt(quantityInput.value),
+                        prescription: orderType === 'prescription' ? window.prescriptionData : null,
+                        is_preorder: isPreorder
+                    });
+                    
+                    setTimeout(() => {
+                        addToCartBtn.classList.remove('animating');
+                        addToCartBtn.classList.add('success-state');
+                        const originalText = addToCartBtn.querySelector('.btn-text').textContent;
+                        addToCartBtn.querySelector('.btn-text').textContent = 'Added!';
+                        
+                        setTimeout(() => {
+                            addToCartBtn.classList.remove('success-state');
+                            addToCartBtn.querySelector('.btn-text').textContent = originalText;
+                        }, 2000);
+                        
+                        // Show cart
+                        const cartSidebar = document.getElementById('cart-sidebar');
+                        if(cartSidebar) cartSidebar.classList.add('active');
+                        
+                        window.dispatchEvent(new CustomEvent('content-loaded', { detail: { path: 'layout/Header' } }));
+                    }, 700);
+
+                } catch (err) {
+                    addToCartBtn.classList.remove('animating');
+                    if(err.response?.status === 401) {
+                        await EvelensNotify.confirm(
+                            'Login Required', 
+                            'Please login to your account to add items to your cart.',
+                            () => window.location.href = '../auth/',
+                            'Login Now',
+                            'Later'
+                        );
+                    } else {
+                        await EvelensNotify.error('Error', err.response?.data?.message || err.message);
+                    }
+                }
+            });
+        }
+
+        const checkWishlist = async () => {
+            try {
+                const res = await WishlistService.getWishlist();
+                if (res.data?.some(item => item.product_id == productId)) {
+                    const wlBtn = document.querySelector(".btn-eyewear-wishlist");
+                    if(wlBtn) {
+                        wlBtn.querySelector('i').className = 'fi fi-ss-heart';
+                        wlBtn.classList.add('wishlist-active');
+                    }
+                }
+            } catch (err) {}
+        };
+        checkWishlist();
+
+        const wlBtn = document.querySelector(".btn-eyewear-wishlist");
+        if(wlBtn) {
+            wlBtn.onclick = async (e) => {
+                e.preventDefault();
+                try {
+                    const res = await WishlistService.toggleItem(productId);
+                    const status = res.data && res.data.status ? res.data.status : res.status;
+                    if (status === 'added' || status === 'success') {
+                        wlBtn.querySelector('i').className = 'fi fi-ss-heart';
+                        wlBtn.classList.add('wishlist-active');
+                    } else {
+                        wlBtn.querySelector('i').className = 'fi fi-rs-heart';
+                        wlBtn.classList.remove('wishlist-active');
+                    }
+                    window.dispatchEvent(new CustomEvent('content-loaded', { detail: { path: 'layout/Header' } }));
+                } catch (err) { alert('Please login to continue.'); }
+            };
+        }
+
+        // --- VIP LENS SELECTOR LOGIC ---
+        async function initLenses() {
+            const cardsContainer = document.getElementById('lens-cards-container');
+            if(!cardsContainer) return;
+
+            // Don't fetch lenses if viewing a lens product
+            const catId = product.category?.id || product.category_id;
+            if (catId == 3) return;
+
+            try {
+                const lensRes = await apiClient.get('/products/lenses/available');
+                const lenses = lensRes.data?.data || [];
+                
+                if(lenses.length > 0) {
+                    // Update hidden select for cart logic compatibility
+                    lensSelect.innerHTML = '<option value="">Frame only</option>' + 
+                        lenses.map(l => `<option value="${l.id}" data-price="${l.price}">${l.name}</option>`).join('');
+
+                    // Render VIP Cards
+                    const getLensImg = (name) => {
+                        const n = name.toLowerCase();
+                        if (n.includes('chemi u2 1.67')) return 'chemi U2 1.67.jpg';
+                        if (n.includes('chemi u6 1.60')) return 'chemi U6 1.60.jpg';
+                        if (n.includes('chemi u6 1.67')) return 'chemi U6 1.67.jpg';
+                        if (n.includes('chemi u6 1.74')) return 'chemi U6 1.74.jpg';
+                        if (n.includes('bevis')) return 'bevis optical.jpg';
+                        if (n.includes('essilor')) return 'essilor crizal.jpg';
+                        return 'elements.jpg';
+                    };
+
+                    cardsContainer.innerHTML = `
+                        <div class="lens-card selected" data-id="">
+                            <div class="lens-card__img-wrapper">
+                                <img src="../../assets/images/logo.png" class="lens-card__img" alt="None" style="opacity: 0.2">
+                            </div>
+                            <h4 class="lens-card__name">Frame Only</h4>
+                            <p class="lens-card__type">Standard original lenses</p>
+                            <span class="lens-card__price">+${format(0)}</span>
+                        </div>
+                    ` + lenses.map(l => `
+                        <div class="lens-card" data-id="${l.id}" data-product-id="${l.product_id}" data-price="${l.price}" title="Double click to view lens details">
+                            <img src="../../assets/images/lens/${getLensImg(l.name)}" 
+                                 class="lens-card__img" alt="${l.name}" 
+                                 onerror="this.src='../../assets/images/products/placeholder.png'">
+                            <h4 class="lens-card__name">${l.name}</h4>
+                            <p class="lens-card__type">${l.lens_type} • ${l.material}</p>
+                            <span class="lens-card__price">+${format(l.price)}</span>
+                        </div>
+                    `).join('');
+
+                    // Add click handlers
+                    cardsContainer.querySelectorAll('.lens-card').forEach(card => {
+                        card.addEventListener('click', () => {
+                            cardsContainer.querySelectorAll('.lens-card').forEach(c => c.classList.remove('selected'));
+                            card.classList.add('selected');
+                            
+                            // Sync with hidden select
+                            lensSelect.value = card.dataset.id || "";
+                            updatePricing();
+                            updatePrescriptionVisibility();
+                        });
+
+                            // Double click to view lens details
+                            card.addEventListener('dblclick', () => {
+                                if (card.dataset.productId) {
+                                    window.location.href = `index.html?id=${card.dataset.productId}`;
+                                }
+                            });
+                    });
+                } else {
+                    cardsContainer.innerHTML = '<p class="info-text">No lens packages available for this frame.</p>';
+                }
+            } catch(e) {
+                console.error("Lens loading failed", e);
+                cardsContainer.innerHTML = '<p class="error-text">Failed to load lens options.</p>';
+            }
+        }
+        
+        await initLenses();
+        updatePricing();
+        updatePrescriptionVisibility();
+      });
+    </script>
+    <!-- Standalone Lens Confirmation Modal -->
+    <div id="lens-confirm-modal" class="prescription-modal-overlay">
+        <div class="prescription-modal-content" style="max-width: 500px; text-align: center;">
+            <div style="font-size: 3rem; color: var(--first-color); margin-bottom: 1rem;">
+                <i class="fi fi-rs-info"></i>
+            </div>
+            <h3 style="margin-bottom: 1rem; font-size: 1.5rem;">Standalone Lens Purchase</h3>
+            <p style="color: #666; line-height: 1.6; margin-bottom: 2rem;">
+                You are adding <strong>Lens</strong> without a frame. 
+                <br><br>
+                To have these lenses professionally mounted, please also add a <strong>Frame</strong> to your cart. 
+                If you proceed with standalone purchase, they will be shipped as uncut lens blanks unless you provide specific instructions at checkout.
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <a href="../shop/?category=1" class="btn btn--outline" style="flex: 1;">Browse Frames</a>
+                <button type="button" id="confirm-add-lens" class="btn" style="flex: 1;">Continue Anyway</button>
+            </div>
+            <button type="button" onclick="document.getElementById('lens-confirm-modal').classList.remove('show')" 
+                    style="margin-top: 1.5rem; background: none; border: none; color: #999; cursor: pointer; text-decoration: underline;">
+                Cancel
+            </button>
+        </div>
+    </div>
+  </body>
+</html>

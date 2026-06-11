@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Hub — EVELENS</title>
+    
+    <!--=============== FLATICON ===============-->
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-straight/css/uicons-regular-straight.css" />
+    
+    <!--=============== CSS ===============-->
+    <link rel="stylesheet" href="../../assets/css/styles.css?v=3" />
+    <link rel="stylesheet" href="../../assets/css/admin.css?v=3" />
+    <link rel="stylesheet" href="../../assets/css/refactor-utils.css?v=3" />
+
+    <!--=============== SCRIPTS ===============-->
+    <script src="../../js/core/layout-loader.js?v=4" defer></script>
+    <script type="module" src="../../js/core/ui-permissions.js?v=4" defer></script>
+</head>
+<body class="admin-body">
+    <!--=============== SIDEBAR ===============-->
+    <aside class="sidebar" data-include="layout/StaffSidebar"></aside>
+
+    <!--=============== MAIN CONTENT ===============-->
+    <main class="admin-main">
+        <header class="admin-header flex" data-include="layout/AdminHeader"></header>
+
+        <section class="section">
+            <h2 class="section__title">Dashboard Hub</h2>
+            
+            <div id="dashboard-modules" class="dashboard-modules-container">
+                <!-- Modules will be loaded here dynamically -->
+                <div class="loading-spinner">Initializing...</div>
+            </div>
+        </section>
+    </main>
+    <script type="module" src="../../js/pages/portal.js"></script>
+</body>
+</html>

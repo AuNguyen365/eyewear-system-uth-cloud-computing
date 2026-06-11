@@ -1,0 +1,91 @@
+<!--=============== INVENTORY MODULE ===============-->
+<h2 class="section__title">Inventory Management</h2>
+
+<div class="metrics-grid">
+    <div class="metric-card">
+        <div class="metric-label">Total SKUs</div>
+        <div class="metric-value" id="totalSkus">0</div>
+    </div>
+    <div class="metric-card">
+        <div class="metric-label">Total Stock</div>
+        <div class="metric-value" id="totalStock">0</div>
+    </div>
+    <div class="metric-card">
+        <div class="metric-label">Low Stock Items</div>
+        <div class="metric-value" id="lowStock">0</div>
+    </div>
+    <div class="metric-card">
+        <div class="metric-label">Out of Stock</div>
+        <div class="metric-value" id="outOfStock">0</div>
+    </div>
+</div>
+
+<div id="alertContainer" class="alert-container"></div>
+
+
+<div class="admin-table container admin-panel">
+    <div class="inventory-header">
+        <h3 class="table__title">Inventory List</h3>
+        <div class="btn-group flex admin-toolbar__actions">
+            <button id="exportInventoryBtn" type="button" class="btn btn--sm admin-action-btn admin-action-btn--primary">
+                <i class="fi fi-rs-download"></i> Export CSV
+            </button>
+            <button id="refreshInventoryBtn" type="button" class="btn btn--sm admin-action-btn admin-action-btn--secondary">
+                <i class="fi fi-rs-refresh"></i> Refresh
+            </button>
+        </div>
+    </div>
+    <!-- Filter Section -->
+    <div class="filter-section">
+        <div class="filter-grid">
+            <div class="filter-group search">
+                <label for="searchProduct">Search Product / SKU</label>
+                <input type="text" id="searchProduct" placeholder="Enter product name or SKU..."/>
+            </div>
+            <div class="filter-group select">
+                <label for="filterCategory">Category</label>
+                <select id="filterCategory">
+                    <option value="">All Categories</option>
+                    <option value="Frames">Frames</option>
+                    <option value="Sunglasses">Sunglasses</option>
+                    <option value="Lenses">Lenses</option>
+                </select>
+            </div>
+            <div class="filter-group select">
+                <label for="filterStatus">Stock Status</label>
+                <select id="filterStatus">
+                    <option value="">All Items</option>
+                    <option value="In Stock">In Stock</option>
+                    <option value="Low Stock">Low Stock</option>
+                    <option value="Out of Stock">Out of Stock</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="table__container">
+        <table class="table inventory__table" id="inventoryTable">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th style="text-align: center;">Variant</th>
+                    <th style="text-align: center;">SKU</th>
+                    <th style="text-align: center;">Stock</th>
+                    <th style="text-align: center;" title="Số lượng khách đã đặt nhưng chưa giao">Reserved <i class="fi fi-rs-info" style="font-size: 10px;"></i></th>
+                    <th style="text-align: center;" title="Số lượng thực tế có thể bán cho khách mới">Available</th>
+                    <th style="text-align: center;" title="Mức tồn kho tối thiểu để báo nhập hàng">Reorder <i class="fi fi-rs-bell" style="font-size: 10px;"></i></th>
+                    <th style="text-align: center;">Status</th>
+                    <th style="min-width: 110px; text-align: center;">Action</th>
+                </tr>
+            </thead>
+            <tbody id="inventoryTableBody"></tbody>
+        </table>
+    </div>
+    <div id="emptyState" class="empty-state" hidden>
+        <div class="empty-icon">📦</div>
+        <h3>No Products Found</h3>
+        <p>Try adjusting your search or filters</p>
+    </div>
+</div>
+
+<!-- Logic for this module -->
+<script type="module" src="/js/pages/admin-inventory.js"></script>

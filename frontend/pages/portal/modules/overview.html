@@ -1,0 +1,87 @@
+<!--=============== OVERVIEW MODULE ===============-->
+<div class="metrics-grid">
+    <div data-permission="view_system_logs" class="metric-card">
+        <div class="metric-label">Server Status</div>
+        <div class="metric-value">99.9%</div>
+        <div class="badge badge-shipped">Online</div>
+    </div>
+    <div data-permission="view_reports" class="metric-card">
+        <div class="metric-label">Daily Revenue</div>
+        <div class="metric-value" id="overview-revenue">...</div>
+        <div class="badge badge-shipped">Today</div>
+    </div>
+    <div data-permission="view_orders" class="metric-card">
+        <div class="metric-label">New Orders</div>
+        <div class="metric-value" id="overview-new-orders">...</div>
+        <div class="badge badge-pending">To Review</div>
+    </div>
+    <div data-permission="pack_order" class="metric-card">
+        <div class="metric-label">To Pack</div>
+        <div class="metric-value" id="overview-to-pack">...</div>
+        <div class="badge badge-pending">Priority</div>
+    </div>
+</div>
+
+<div class="admin-table container admin-panel dashboard-quick-actions-panel">
+    <div class="dashboard-quick-actions__header">
+        <h3 class="table__title">Quick Actions</h3>
+        <p class="dashboard-quick-actions__note">Jump straight to the staff workflows you use every day.</p>
+    </div>
+
+    <div class="dashboard-quick-actions">
+        <a href="/pages/portal/index.html?view=orders" class="dashboard-quick-action sidebar-link" data-view="orders" data-permission="view_orders">
+            <span class="dashboard-quick-action__icon"><i class="fi fi-rs-shopping-cart-check"></i></span>
+            <span class="dashboard-quick-action__content">
+                <strong>Review Orders</strong>
+                <small>Verify new orders and move them forward.</small>
+            </span>
+        </a>
+
+        <a href="/pages/portal/index.html?view=support" class="dashboard-quick-action sidebar-link" data-view="support" data-permission="contact_customer">
+            <span class="dashboard-quick-action__icon"><i class="fi fi-rs-envelope"></i></span>
+            <span class="dashboard-quick-action__content">
+                <strong>Reply to Customers</strong>
+                <small>Open support tickets and respond to messages.</small>
+            </span>
+        </a>
+
+        <a href="/pages/portal/index.html?view=inventory" class="dashboard-quick-action sidebar-link" data-view="inventory" data-permission="manage_products, process_preorder_inventory">
+            <span class="dashboard-quick-action__icon"><i class="fi fi-rs-box"></i></span>
+            <span class="dashboard-quick-action__content">
+                <strong>Check Inventory</strong>
+                <small>Monitor stock and keep products available.</small>
+            </span>
+        </a>
+
+        <a href="/pages/portal/index.html?view=users" class="dashboard-quick-action sidebar-link" data-view="users" data-permission="manage_roles, manage_all_users">
+            <span class="dashboard-quick-action__icon"><i class="fi fi-rs-users-gear"></i></span>
+            <span class="dashboard-quick-action__content">
+                <strong>Manage Staff</strong>
+                <small>Manage roles and staff permissions.</small>
+            </span>
+        </a>
+    </div>
+</div>
+
+<div class="admin-table container admin-panel">
+    <h3 class="table__title">Recent Activity</h3>
+    <div class="table__container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Event</th>
+                    <th>User</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="4" class="table-state-cell">No recent activity logs available.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="module" src="/js/dashboard/modules/overview-module.js"></script>

@@ -1,0 +1,76 @@
+<div class="profile-module">
+    <div class="module-header flex">
+        <div>
+            <h2 class="section__title">Personal Profile</h2>
+            <p class="text-color-light">Manage your staff account information and preferences.</p>
+        </div>
+    </div>
+
+    <div class="grid profile-grid">
+        <!-- Profile Card -->
+        <div class="profile-card">
+            <div class="avatar-wrapper">
+                <img src="/assets/images/avatars/avatar-1.jpg" alt="Profile" class="avatar-img">
+                <button class="btn--sm avatar-edit-btn">
+                    <i class="fi fi-rs-camera"></i>
+                </button>
+            </div>
+            <h3 id="profile-name-full" class="profile-name">Loading...</h3>
+            <p id="profile-role-badge" class="role-badge"></p>
+            
+            <div class="profile-stats grid">
+                <div>
+                    <h4 class="stat-value">124</h4>
+                    <p class="stat-label">Tasks Done</p>
+                </div>
+                <div>
+                    <h4 class="stat-value">98%</h4>
+                    <p class="stat-label">Success Rate</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Area -->
+        <div class="profile-form-area">
+            <div class="tabs__content">
+                <h3 class="tab__header form-header">Account Settings</h3>
+                <form id="staff-profile-form" class="form grid">
+                    <div class="form__group grid form-row">
+                        <div class="input-wrap">
+                            <label class="field-label">Full Name</label>
+                            <input type="text" name="name" class="form__input field-input-full" readonly />
+                        </div>
+                        <div class="input-wrap">
+                            <label class="field-label">Email Address</label>
+                            <input type="email" name="email" class="form__input field-input-full" readonly />
+                        </div>
+                    </div>
+
+                    <div class="form__group grid form-row">
+                        <div class="input-wrap">
+                            <label class="field-label">Phone Number</label>
+                            <input type="text" name="phone" placeholder="No phone set" class="form__input field-input-full" />
+                        </div>
+                        <div class="input-wrap">
+                            <label class="field-label">Birthdate</label>
+                            <input type="date" name="birthdate" class="form__input field-input-full" />
+                        </div>
+                    </div>
+
+                    <div class="input-wrap">
+                        <label class="field-label">Workspace Address</label>
+                        <textarea name="address" class="form__input field-textarea"></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn--md">Update Profile</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Load styles and scripts for this module -->
+<link rel="stylesheet" href="/assets/css/pages/profile-module.css">
+<script type="module" src="/js/pages/profile-module.js"></script>

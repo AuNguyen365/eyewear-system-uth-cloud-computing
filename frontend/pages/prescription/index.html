@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../../assets/css/refactor-utils.css">
+    <title>Enter Prescription — EVELENS</title>
+</head>
+<body>
+    <main class="main container section--lg">
+        <h2 class="section__title">Prescription Details</h2>
+        <p class="mb-2">Enter your prescription manually or upload a photo from your doctor.</p>
+
+        <form action="#" class="form grid">
+            <div class="prescription-grid">
+                <div></div>
+                <div class="eye-label">Sphere (SPH)</div>
+                <div class="eye-label">Cylinder (CYL)</div>
+                <div class="eye-label">Axis</div>
+
+                <div class="eye-row">
+                    <div class="eye-label">Right Eye (OD)</div>
+                    <input type="text" class="form__input" placeholder="0.00">
+                    <input type="text" class="form__input" placeholder="0.00">
+                    <input type="text" class="form__input" placeholder="0">
+                </div>
+
+                <div class="eye-row">
+                    <div class="eye-label">Left Eye (OS)</div>
+                    <input type="text" class="form__input" placeholder="0.00">
+                    <input type="text" class="form__input" placeholder="0.00">
+                    <input type="text" class="form__input" placeholder="0">
+                </div>
+            </div>
+
+            <div class="grid prescription-double-grid">
+                <div>
+                    <h3 class="footer__title">Pupillary Distance (PD)</h3>
+                    <input type="text" class="form__input" placeholder="63mm">
+                </div>
+                <div>
+                    <h3 class="footer__title">Add (For Multi-focal)</h3>
+                    <input type="text" class="form__input" placeholder="+2.00">
+                </div>
+            </div>
+
+            <div class="upload-area">
+                <i class="fi fi-rs-cloud-upload"></i>
+                <h4>Upload Prescription Photo</h4>
+                <p>Accepted formats: JPG, PNG, PDF</p>
+            </div>
+
+            <button type="submit" class="btn btn--md">Store in Profile</button>
+        </form>
+    </main>
+
+    <script src="../../../js/main.js"></script>
+</body>
+</html>
