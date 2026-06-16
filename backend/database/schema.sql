@@ -23,6 +23,9 @@ CREATE TABLE IF NOT EXISTS `user` (
 	verify_token VARCHAR(255) NULL,
 	phone VARCHAR(30) NULL,
 	status ENUM('active', 'inactive', 'blocked') DEFAULT 'inactive',
+	two_factor_enabled TINYINT(1) DEFAULT 0,
+	two_factor_code VARCHAR(10) NULL,
+	two_factor_expires_at TIMESTAMP NULL,
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

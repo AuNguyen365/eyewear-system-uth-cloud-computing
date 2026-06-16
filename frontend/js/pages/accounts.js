@@ -297,11 +297,13 @@ async function loadProfileData() {
         const birthdateInput = document.querySelector('input[name="birthdate"]');
         const profileEmailInput = document.getElementById('profile-email-input');
         const profileEditorNameInput = document.getElementById('profile-editor-name-input');
+        const profile2faToggle = document.getElementById('profile-2fa-toggle');
 
         if (fullNameInput) fullNameInput.value = displayName;
         if (profileEditorNameInput) profileEditorNameInput.value = displayName;
         if (birthdateInput) birthdateInput.value = profile.birthdate || '';
         if (profileEmailInput) profileEmailInput.value = user.email || '';
+        if (profile2faToggle) profile2faToggle.checked = (parseInt(user.two_factor_enabled) === 1);
 
         const fullNameEl = document.getElementById('profile-fullname');
         const birthdateEl = document.getElementById('profile-birthdate');
@@ -461,7 +463,9 @@ profileForm?.addEventListener('submit', async (event) => {
     }
     try {
         const formData = new FormData(profileForm);
-        await api.profile.updateProfile(Object.fromEntries(formData));
+        const data = Object.fromEntries(formData);
+        data.two_factor_enabled = document.getElementById('profile-2fa-toggle')?.checked ? 1 : 0;
+        await api.profile.updateProfile(data);
         await loadProfileData();
         alert('Profile updated successfully!');
     } catch (error) {

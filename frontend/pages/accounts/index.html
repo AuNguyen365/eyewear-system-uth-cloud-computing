@@ -182,6 +182,18 @@
                         name="birthdate"
                       />
                     </div>
+                    <div class="profile-details-form__group" style="grid-column: 1 / -1; display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                      <input
+                        id="profile-2fa-toggle"
+                        type="checkbox"
+                        name="two_factor_enabled"
+                        value="1"
+                        style="width: 20px; height: 20px; cursor: pointer; accent-color: var(--first-color);"
+                      />
+                      <label class="profile-editor__label" for="profile-2fa-toggle" style="margin-bottom: 0; cursor: pointer; font-weight: 500;">
+                        Enable Two-Factor Authentication (OTP via Email)
+                      </label>
+                    </div>
                   </form>
                 </div>
                 <div class="profile-editor__actions">

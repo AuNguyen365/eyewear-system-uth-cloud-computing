@@ -33,6 +33,7 @@ Router::group(['prefix' => 'api/v1'], function () {
     Router::group(['prefix' => 'auth'], function () {
         Router::post('register', [AuthController::class, 'register']);
         Router::post('login', [AuthController::class, 'login']);
+        Router::post('verify-2fa', [AuthController::class, 'verify2FA']);
         Router::post('google-login', [AuthController::class, 'googleLogin']);
         Router::get('verify', [AuthController::class, 'verify']);
         Router::post('forgot-password', [AuthController::class, 'forgotPassword']);
