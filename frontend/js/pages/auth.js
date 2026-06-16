@@ -70,7 +70,7 @@ import api from '../services/api.js';
             loader.update({
                 type: 'success',
                 title: 'Registration Successful!',
-                desc: response.message || 'Please check your email to activate your account.',
+                desc: response.message || 'Registration successful. You can log in now.',
                 btnText: 'Great'
             });
             container.classList.remove("active");

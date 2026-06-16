@@ -29,56 +29,27 @@ class AuthService
         $stmt->execute([$data['email']]);
         $existingUser = $stmt->fetch();
         if ($existingUser) {
-            if ($existingUser['status'] === 'inactive') {
-                $verifyToken = $existingUser['verify_token'] ?: bin2hex(random_bytes(16));
-                if (!$existingUser['verify_token']) {
-                    $updateToken = $db->prepare('UPDATE `user` SET verify_token = ? WHERE id = ?');
-                    $updateToken->execute([$verifyToken, $existingUser['id']]);
-                }
-
-                $verificationUrl = $this->buildVerificationUrl($verifyToken);
-                try {
-                    $this->sendVerificationEmail($data['email'], $data['name'] ?: $existingUser['full_name'] ?: $data['email'], $verifyToken);
-                } catch (\Exception $e) {}
-
-                return [
-                    'id' => $existingUser['id'],
-                    'name' => $data['name'] ?: $existingUser['full_name'],
-                    'email' => $data['email'],
-                    'roles' => ['customer'],
-                    'verification_url' => $verificationUrl,
-                    'email_sent' => true,
-                    'resend_verification' => true,
-                ];
-            } else {
-                throw new \Exception('This email is already registered and active. Please sign in.');
-            }
+            throw new \Exception('This email is already registered. Please sign in.');
         }
 
         $hash = password_hash($data['password'], PASSWORD_DEFAULT);
-        $verifyToken = bin2hex(random_bytes(16));
 
-        // 3. Insert into user table
-        $stmt = $db->prepare('INSERT INTO `user` (full_name, email, password_hash, verify_token, status) VALUES (?, ?, ?, ?, ?)');
-        $stmt->execute([$data['name'], $data['email'], $hash, $verifyToken, 'inactive']);
+        // 3. Insert into user table with 'active' status directly
+        $stmt = $db->prepare('INSERT INTO `user` (full_name, email, password_hash, verify_token, status) VALUES (?, ?, ?, NULL, ?)');
+        $stmt->execute([$data['name'], $data['email'], $hash, 'active']);
         $userId = $db->lastInsertId();
 
         // 4. Assign default role (Customer)
         $roleInsert = $db->prepare('INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)');
         $roleInsert->execute([$userId, $roleId]);
 
-        $verificationUrl = $this->buildVerificationUrl($verifyToken);
-        try {
-            $this->sendVerificationEmail($data['email'], $data['name'] ?? $data['email'], $verifyToken);
-        } catch (\Exception $e) {}
-
         return [
             'id' => $userId,
             'name' => $data['name'],
             'email' => $data['email'],
             'roles' => ['customer'],
-            'verification_url' => $verificationUrl,
-            'email_sent' => true,
+            'verification_url' => null,
+            'email_sent' => false,
         ];
     }
 

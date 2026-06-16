@@ -29,14 +29,12 @@ class AuthController extends BaseController
 
         try {
             $user = $this->authService->register($data);
-            $successMessage = ($user['resend_verification'] ?? false)
-                ? 'This account already exists but is not verified. A verification email has been resent.'
-                : 'Registration successful. A verification email has been sent.';
+            $successMessage = 'Registration successful. You can log in now.';
             
             return ApiResponse::created([
                 'user' => $user,
-                'verification_url' => $user['verification_url'] ?? null,
-                'email_sent' => $user['email_sent'] ?? false
+                'verification_url' => null,
+                'email_sent' => false
             ], $successMessage);
         } catch (Exception $e) {
             $message = $e->getMessage();
