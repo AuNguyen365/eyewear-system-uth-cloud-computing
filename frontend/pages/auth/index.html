@@ -93,6 +93,32 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="../../js/services/firebaseInit.js"></script>
 
+    <!--=============== 2FA MODAL ===============-->
+    <div id="two-factor-modal" class="prescription-modal-overlay">
+        <div class="two-factor-modal-content">
+            <div class="modal__header">
+                <h3 class="modal__title">Security Verification</h3>
+                <button type="button" class="modal__close" id="close-2fa-modal">&times;</button>
+            </div>
+            <div class="modal__body" style="text-align: center; padding: 10px 0;">
+                <div style="font-size: 40px; color: #0d0d0d; margin-bottom: 15px;">
+                    <i class="fi fi-rs-envelope" style="display: block;"></i>
+                </div>
+                <p style="font-size: 0.95rem; line-height: 1.5; color: #4b5563; margin-bottom: 20px;">
+                    A 6-digit verification code has been sent to <br>
+                    <strong id="two-factor-email-display" style="color: #1a1a1a;">...</strong>.
+                </p>
+                <form id="two-factor-form" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+                    <input type="hidden" id="two-factor-temp-token" />
+                    <input type="text" id="two-factor-code-input" maxlength="6" placeholder="0 0 0 0 0 0" required 
+                           style="font-size: 28px; font-weight: 700; letter-spacing: 8px; text-align: center; padding: 12px; margin-bottom: 15px; width: 100%; max-width: 280px; border: 1.5px solid #e2e8f0; border-radius: 12px; outline: none; transition: 0.3s; background: #f8fafc;" />
+                    <div id="two-factor-message" class="auth-message error" style="margin-bottom: 15px; font-size: 0.85rem;" aria-live="polite"></div>
+                    <button type="submit" class="btn" style="width: 100%; max-width: 280px; margin-top: 5px;">Verify & Sign In</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Page Logic -->
     <script src="../../js/main.js"></script>
     <script type="module" src="../../js/pages/auth.js"></script>

@@ -19,6 +19,19 @@ class AuthService {
     return body; // Return full body for page-level success check
   }
 
+  async verify2FA(tempToken, code) {
+    const response = await apiClient.post('/auth/verify-2fa', { temp_token: tempToken, code: code });
+    const body = response.data;
+    const data = body.data;
+    
+    if (data && data.token) {
+      sessionStorage.setItem('auth_token', data.token);
+      this.saveUserInfo(data.user);
+      apiClient.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
+    }
+    return body;
+  }
+
   async googleLogin(idToken) {
     const response = await apiClient.post('/auth/google-login', { id_token: idToken });
     const body = response.data;

@@ -87,6 +87,57 @@ import api from '../services/api.js';
         }
     });
 
+    // 2FA Modal references
+    const twoFactorModal = document.getElementById('two-factor-modal');
+    const closeTwoFactorModalBtn = document.getElementById('close-2fa-modal');
+    const twoFactorForm = document.getElementById('two-factor-form');
+    const twoFactorCodeInput = document.getElementById('two-factor-code-input');
+    const twoFactorMessage = document.getElementById('two-factor-message');
+    const twoFactorEmailDisplay = document.getElementById('two-factor-email-display');
+    const twoFactorTempToken = document.getElementById('two-factor-temp-token');
+
+    const close2FAModal = () => {
+        twoFactorModal?.classList.remove('active');
+        if (twoFactorForm) twoFactorForm.reset();
+        if (twoFactorMessage) twoFactorMessage.textContent = '';
+    };
+
+    closeTwoFactorModalBtn?.addEventListener('click', close2FAModal);
+    twoFactorModal?.addEventListener('click', (e) => {
+        if (e.target === twoFactorModal) {
+            close2FAModal();
+        }
+    });
+
+    twoFactorForm?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const code = twoFactorCodeInput.value.trim();
+        const tempToken = twoFactorTempToken.value;
+
+        if (code.length !== 6) {
+            if (twoFactorMessage) {
+                twoFactorMessage.style.color = '#dc2626';
+                twoFactorMessage.textContent = 'Please enter a 6-digit code.';
+            }
+            return;
+        }
+
+        const loader = await EvelensNotify.loading('Verifying code...');
+        try {
+            await api.auth.verify2FA(tempToken, code);
+            loader.hide();
+            close2FAModal();
+            window.location.href = api.auth.isStaff() ? '/pages/portal/index.html' : '/index.html';
+        } catch (error) {
+            const errorDesc = error.response?.data?.message || error.message || 'Verification failed.';
+            loader.hide();
+            if (twoFactorMessage) {
+                twoFactorMessage.style.color = '#dc2626'; // Red color for actual verification errors
+                twoFactorMessage.textContent = errorDesc;
+            }
+        }
+    });
+
     // Handle Login
     const signInForm = document.querySelector('.sign-in-container form');
     signInForm?.addEventListener('submit', async (e) => {
@@ -98,7 +149,28 @@ import api from '../services/api.js';
         if (btn) btn.disabled = true;
 
         try {
-            await api.auth.login(Object.fromEntries(formData));
+            const response = await api.auth.login(Object.fromEntries(formData));
+            
+            if (response.data && response.data.requires_2fa) {
+                loader.hide();
+                if (twoFactorTempToken) twoFactorTempToken.value = response.data.temp_token;
+                if (twoFactorEmailDisplay) twoFactorEmailDisplay.textContent = response.data.email || '';
+                
+                if (twoFactorMessage) {
+                    if (response.data.mail_sent === false) {
+                        twoFactorMessage.style.color = '#e65100'; // Orange warning color
+                        twoFactorMessage.innerHTML = `⚠️ <strong>Notice:</strong> SMTP send failed (${response.data.mail_error}).<br>Use debug code: <strong>${response.data.debug_otp}</strong> to sign in.`;
+                    } else {
+                        twoFactorMessage.style.color = '';
+                        twoFactorMessage.textContent = '';
+                    }
+                }
+                
+                twoFactorModal?.classList.add('active');
+                if (twoFactorCodeInput) twoFactorCodeInput.focus();
+                return;
+            }
+
             loader.hide();
             window.location.href = api.auth.isStaff() ? '/pages/portal/index.html' : '/index.html';
         } catch (error) {

@@ -55,6 +55,18 @@ class AuthController extends BaseController
 
         try {
             $result = $this->authService->login($data);
+            
+            if (isset($result['requires_2fa']) && $result['requires_2fa'] === true) {
+                return ApiResponse::success([
+                    'requires_2fa' => true,
+                    'temp_token' => $result['temp_token'],
+                    'email' => $result['email'],
+                    'mail_sent' => $result['mail_sent'] ?? true,
+                    'mail_error' => $result['mail_error'] ?? null,
+                    'debug_otp' => $result['debug_otp'] ?? null
+                ], 'Two-factor authentication required.');
+            }
+
             return ApiResponse::success([
                 'user' => $result['user'],
                 'token' => $result['token'],
@@ -65,6 +77,27 @@ class AuthController extends BaseController
                 return ApiResponse::forbidden($message);
             }
             return ApiResponse::unauthorized($message);
+        }
+    }
+
+    public function verify2FA()
+    {
+        $data = $this->getJsonInput();
+        $tempToken = $data['temp_token'] ?? null;
+        $code = $data['code'] ?? null;
+
+        if (empty($tempToken) || empty($code)) {
+            return ApiResponse::validationError('Temporary token and verification code are required.');
+        }
+
+        try {
+            $result = $this->authService->verifyTwoFactorCode($tempToken, $code);
+            return ApiResponse::success([
+                'user' => $result['user'],
+                'token' => $result['token'],
+            ], 'Two-factor verification successful.');
+        } catch (Exception $e) {
+            return ApiResponse::unauthorized($e->getMessage());
         }
     }
 

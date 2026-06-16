@@ -28,7 +28,7 @@ class UpdateProfileRequest
             $errors['address'] = 'Address must be at most 500 characters';
         }
 
-        if (isset($data['birthdate'])) {
+        if (isset($data['birthdate']) && trim((string)$data['birthdate']) !== '') {
             $date = strtotime($data['birthdate']);
             if ($date === false) {
                 $errors['birthdate'] = 'Birthdate must be a valid date';
