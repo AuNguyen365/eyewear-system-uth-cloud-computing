@@ -184,23 +184,38 @@
     async function updateAuthUI() {
         const portalArea = document.getElementById('header-user-portal');
         const adminPortal = document.getElementById('admin-user-portal');
-        if (!portalArea && !adminPortal) return;
+        const mobileAuthLink = document.getElementById('mobile-auth-link');
+        if (!portalArea && !adminPortal && !mobileAuthLink) return;
 
         // --- IMMEDIATE FALLBACK (UX improvement) ---
         // If we have local info, show it immediately while the API validates
         const localUserJson = localStorage.getItem('user_info');
-        if (localUserJson && portalArea) {
+        if (localUserJson) {
             try {
                 const localUser = JSON.parse(localUserJson);
                 if (localUser && (localUser.full_name || localUser.name)) {
-                    renderUserPortal(portalArea, localUser.full_name || localUser.name, false);
+                    if (portalArea) {
+                        renderUserPortal(portalArea, localUser.full_name || localUser.name, false);
+                    }
+                    if (mobileAuthLink) {
+                        mobileAuthLink.href = '#';
+                        mobileAuthLink.className = 'nav__link logout-btn';
+                        mobileAuthLink.innerHTML = 'Logout';
+                    }
                 }
             } catch (e) { }
         }
 
         try {
             const { default: authService } = await import(projectRoot + 'js/services/authService.js');
-            if (!authService.getToken()) return;
+            if (!authService.getToken()) {
+                if (mobileAuthLink) {
+                    mobileAuthLink.href = `${projectRoot}pages/auth/index.html`;
+                    mobileAuthLink.className = 'nav__link';
+                    mobileAuthLink.innerHTML = 'Sign In';
+                }
+                return;
+            }
 
             const response = await authService.getCurrentUser();
             let user = response.data || response;
@@ -222,9 +237,25 @@
 
                 if (portalArea) renderUserPortal(portalArea, displayName, avatarSrc, isStaff);
                 if (adminPortal) renderAdminPortal(adminPortal, displayName, avatarSrc, isCustomer);
+                if (mobileAuthLink) {
+                    mobileAuthLink.href = '#';
+                    mobileAuthLink.className = 'nav__link logout-btn';
+                    mobileAuthLink.innerHTML = 'Logout';
+                }
+            } else {
+                if (mobileAuthLink) {
+                    mobileAuthLink.href = `${projectRoot}pages/auth/index.html`;
+                    mobileAuthLink.className = 'nav__link';
+                    mobileAuthLink.innerHTML = 'Sign In';
+                }
             }
         } catch (e) {
             console.warn("AuthUI Update failed:", e);
+            if (mobileAuthLink) {
+                mobileAuthLink.href = `${projectRoot}pages/auth/index.html`;
+                mobileAuthLink.className = 'nav__link';
+                mobileAuthLink.innerHTML = 'Sign In';
+            }
         }
     }
 
