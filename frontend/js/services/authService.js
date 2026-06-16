@@ -19,6 +19,19 @@ class AuthService {
     return body; // Return full body for page-level success check
   }
 
+  async googleLogin(idToken) {
+    const response = await apiClient.post('/auth/google-login', { id_token: idToken });
+    const body = response.data;
+    const data = body.data;
+    
+    if (data && data.token) {
+      sessionStorage.setItem('auth_token', data.token);
+      this.saveUserInfo(data.user);
+      apiClient.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
+    }
+    return body;
+  }
+
   async forgotPassword(email) {
     const response = await apiClient.post('/auth/forgot-password', { email });
     return response.data;

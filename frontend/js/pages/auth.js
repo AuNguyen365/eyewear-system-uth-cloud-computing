@@ -1,6 +1,6 @@
 import api from '../services/api.js';
 
-(async function() {
+(async function () {
     if (api.auth.isAuthenticated()) {
         window.location.href = api.auth.isStaff() ? '/pages/portal/index.html' : '/index.html';
         return;
@@ -25,7 +25,7 @@ import api from '../services/api.js';
 
     document.getElementById('signUp')?.addEventListener('click', switchToSignUp);
     document.getElementById('signIn')?.addEventListener('click', switchToSignIn);
-    
+
     // Mobile Toggles
     document.getElementById('toSignUpMobile')?.addEventListener('click', switchToSignUp);
     document.getElementById('toSignInMobile')?.addEventListener('click', switchToSignIn);
@@ -60,7 +60,7 @@ import api from '../services/api.js';
     signUpForm?.addEventListener('submit', async (e) => {
         e.preventDefault();
         const formData = new FormData(signUpForm);
-        
+
         const loader = await EvelensNotify.loading('Creating your account...');
         const btn = signUpForm.querySelector('.btn');
         if (btn) btn.disabled = true;
@@ -111,6 +111,50 @@ import api from '../services/api.js';
         } finally {
             if (btn) btn.disabled = false;
         }
+    });
+
+    // Handle Google login
+    const handleGoogleLogin = async (e) => {
+        if (e) e.preventDefault();
+
+        if (typeof firebase === 'undefined') {
+            await EvelensNotify.error('Firebase Error', 'Firebase SDK is not loaded. Check console logs for warnings.');
+            return;
+        }
+
+        const loader = await EvelensNotify.loading('Connecting to Google...');
+        try {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            const result = await firebase.auth().signInWithPopup(provider);
+            const idToken = result.credential ? result.credential.idToken : null;
+            if (!idToken) {
+                throw new Error("Could not retrieve Google ID Token from credential.");
+            }
+
+            loader.update({
+                type: 'loading',
+                title: 'Authenticating...',
+                desc: 'Signing you in with Google...',
+                btnText: ''
+            });
+
+            await api.auth.googleLogin(idToken);
+            loader.hide();
+            window.location.href = api.auth.isStaff() ? '/pages/portal/index.html' : '/index.html';
+        } catch (error) {
+            console.error("Google Login Error:", error);
+            const errorDesc = error.response?.data?.message || error.message || 'Could not authenticate with Google.';
+            loader.update({
+                type: 'error',
+                title: 'Google Login Failed',
+                desc: errorDesc,
+                btnText: 'Try Again'
+            });
+        }
+    };
+
+    document.querySelectorAll('.google-login-btn').forEach(btn => {
+        btn.addEventListener('click', handleGoogleLogin);
     });
 })();
 

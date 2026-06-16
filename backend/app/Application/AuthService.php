@@ -106,6 +106,126 @@ class AuthService
         ];
     }
 
+    public function googleLogin(string $idToken): array
+    {
+        // 1. Verify token with Google
+        $googleUser = $this->verifyGoogleIdToken($idToken);
+        $email = $googleUser['email'];
+        $name = $googleUser['name'];
+        
+        $db = Database::getInstance();
+        
+        // 2. Look up user in database
+        $stmt = $db->prepare('SELECT * FROM `user` WHERE email = ?');
+        $stmt->execute([$email]);
+        $user = $stmt->fetch();
+        
+        if (!$user) {
+            // User does not exist -> auto-register them
+            // A. Get CUSTOMER role ID
+            $roleStmt = $db->prepare('SELECT id FROM role WHERE name = ?');
+            $roleStmt->execute(['CUSTOMER']);
+            $role = $roleStmt->fetch();
+            if (!$role) {
+                $db->exec("INSERT IGNORE INTO role (name, description) VALUES ('ADMIN', 'Administrator'), ('MANAGER', 'Manager'), ('SALES_STAFF', 'Sales'), ('OPERATIONS_STAFF', 'Operations'), ('CUSTOMER', 'Customer')");
+                $roleStmt->execute(['CUSTOMER']);
+                $role = $roleStmt->fetch();
+            }
+            $roleId = $role['id'];
+            
+            // B. Create a random password since they use Google
+            $randomPassword = bin2hex(random_bytes(16));
+            $hash = password_hash($randomPassword, PASSWORD_DEFAULT);
+            
+            // C. Insert user
+            $insertStmt = $db->prepare('INSERT INTO `user` (full_name, email, password_hash, verify_token, status) VALUES (?, ?, ?, NULL, ?)');
+            $insertStmt->execute([$name, $email, $hash, 'active']);
+            $userId = $db->lastInsertId();
+            
+            // D. Assign CUSTOMER role
+            $roleInsert = $db->prepare('INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)');
+            $roleInsert->execute([$userId, $roleId]);
+            
+            // Re-fetch user
+            $stmt->execute([$email]);
+            $user = $stmt->fetch();
+        } else {
+            // User exists -> verify status
+            if ($user['status'] !== 'active') {
+                throw new \Exception('Your account is blocked or inactive. Please contact admin.');
+            }
+        }
+        
+        // 3. Get user roles, permissions, avatar (same as normal login)
+        $roleStmt = $db->prepare('SELECT r.name FROM role r JOIN user_roles ur ON r.id = ur.role_id WHERE ur.user_id = ?');
+        $roleStmt->execute([$user['id']]);
+        $roles = $roleStmt->fetchAll(\PDO::FETCH_COLUMN);
+        
+        $permStmt = $db->prepare("
+            SELECT DISTINCT p.name
+            FROM permissions p
+            JOIN role_permissions rp ON p.id = rp.permission_id
+            JOIN user_roles ur ON rp.role_id = ur.role_id
+            WHERE ur.user_id = ?
+        ");
+        $permStmt->execute([$user['id']]);
+        $permissions = $permStmt->fetchAll(\PDO::FETCH_COLUMN);
+        
+        $avatarStmt = $db->prepare('SELECT avatar FROM profiles WHERE user_id = ? LIMIT 1');
+        $avatarStmt->execute([$user['id']]);
+        $avatar = $avatarStmt->fetchColumn();
+        
+        // Generate stateless token
+        $tokenBody = $user['id'] . ':' . implode(',', $roles) . ':' . time();
+        $token = base64_encode($tokenBody);
+        
+        return [
+            'user' => [
+                'id' => $user['id'],
+                'name' => $user['full_name'],
+                'email' => $user['email'],
+                'roles' => $roles,
+                'permissions' => $permissions,
+                'avatar' => $avatar ?: null,
+            ],
+            'token' => $token
+        ];
+    }
+
+    private function verifyGoogleIdToken(string $idToken): array
+    {
+        $url = 'https://oauth2.googleapis.com/tokeninfo?id_token=' . urlencode($idToken);
+        
+        $context = stream_context_create([
+            'http' => [
+                'method' => 'GET',
+                'header' => "Accept: application/json\r\n",
+                'ignore_errors' => true,
+                'timeout' => 10,
+            ]
+        ]);
+        
+        $response = @file_get_contents($url, false, $context);
+        if ($response === false) {
+            throw new \Exception('Failed to connect to Google authentication server.');
+        }
+        
+        $data = json_decode($response, true);
+        if (empty($data) || isset($data['error']) || isset($data['error_description'])) {
+            $errorMsg = $data['error_description'] ?? $data['error'] ?? 'Invalid Google token.';
+            throw new \Exception('Google token validation failed: ' . $errorMsg);
+        }
+        
+        if (($data['email_verified'] ?? 'false') !== 'true' && ($data['email_verified'] ?? false) !== true) {
+            throw new \Exception('Google email is not verified.');
+        }
+        
+        return [
+            'email' => $data['email'],
+            'name' => $data['name'] ?? $data['given_name'] ?? $data['email'],
+        ];
+    }
+
     public function logout(?string $token = null): bool
     {
         // Stateless token approach: logout is handled client-side by removing the token.

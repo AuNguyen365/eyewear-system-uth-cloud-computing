@@ -68,6 +68,26 @@ class AuthController extends BaseController
         }
     }
 
+    public function googleLogin()
+    {
+        $data = $this->getJsonInput();
+        $idToken = $data['id_token'] ?? null;
+
+        if (empty($idToken)) {
+            return ApiResponse::validationError('ID token is required.');
+        }
+
+        try {
+            $result = $this->authService->googleLogin($idToken);
+            return ApiResponse::success([
+                'user' => $result['user'],
+                'token' => $result['token'],
+            ], 'Login successful');
+        } catch (Exception $e) {
+            return ApiResponse::unauthorized($e->getMessage());
+        }
+    }
+
     public function verify()
     {
         $token = $this->query('token');
