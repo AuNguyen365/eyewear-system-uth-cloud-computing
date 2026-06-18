@@ -38,6 +38,21 @@ class ProfileService {
     const response = await apiClient.delete(`/profile/addresses/${id}`);
     return response.data;
   }
+
+  async setup2FA() {
+    const response = await apiClient.post('/profile/2fa/setup');
+    return response.data;
+  }
+
+  async enable2FA(code) {
+    const response = await apiClient.post('/profile/2fa/enable', { code });
+    return response.data;
+  }
+
+  async disable2FA() {
+    const response = await apiClient.post('/profile/2fa/disable');
+    return response.data;
+  }
 }
 
 export default new ProfileService();

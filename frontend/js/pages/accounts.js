@@ -303,7 +303,10 @@ async function loadProfileData() {
         if (profileEditorNameInput) profileEditorNameInput.value = displayName;
         if (birthdateInput) birthdateInput.value = profile.birthdate || '';
         if (profileEmailInput) profileEmailInput.value = user.email || '';
-        if (profile2faToggle) profile2faToggle.checked = (parseInt(user.two_factor_enabled) === 1);
+        if (profile2faToggle) {
+            profile2faToggle.checked = (parseInt(user.two_factor_enabled) === 1);
+            sessionStorage.setItem('user_2fa_enabled', user.two_factor_enabled ? '1' : '0');
+        }
 
         const fullNameEl = document.getElementById('profile-fullname');
         const birthdateEl = document.getElementById('profile-birthdate');
@@ -464,7 +467,8 @@ profileForm?.addEventListener('submit', async (event) => {
     try {
         const formData = new FormData(profileForm);
         const data = Object.fromEntries(formData);
-        data.two_factor_enabled = document.getElementById('profile-2fa-toggle')?.checked ? 1 : 0;
+        // Exclude 2FA toggle from form submission as it is managed by the modal verify process
+        delete data.two_factor_enabled;
         await api.profile.updateProfile(data);
         await loadProfileData();
         alert('Profile updated successfully!');
@@ -562,5 +566,118 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedTab = localStorage.getItem(activeTabStorageKey);
     if (savedTab && document.querySelector(savedTab)) {
         setActiveAccountTab(savedTab);
+    }
+});
+
+// --- GOOGLE AUTHENTICATOR 2FA HANDLERS ---
+const profile2faToggle = document.getElementById('profile-2fa-toggle');
+const setupModal = document.getElementById('two-factor-setup-modal');
+const closeSetupModalBtn = document.getElementById('close-2fa-setup-modal');
+const setupForm = document.getElementById('two-factor-setup-form');
+const setupCodeInput = document.getElementById('two-factor-setup-code');
+const setupMessage = document.getElementById('two-factor-setup-message');
+const qrCodeImg = document.getElementById('two-factor-qr-code');
+const qrLoading = document.getElementById('two-factor-qr-loading');
+const secretKeyText = document.getElementById('two-factor-secret-key');
+
+const close2FASetupModal = () => {
+    setupModal?.classList.remove('active');
+    if (setupForm) setupForm.reset();
+    if (setupMessage) setupMessage.textContent = '';
+    if (qrCodeImg) {
+        qrCodeImg.style.display = 'none';
+        qrCodeImg.src = '';
+    }
+    if (qrLoading) qrLoading.style.display = 'flex';
+    if (secretKeyText) secretKeyText.textContent = '-';
+    
+    // Restore checkbox state to actual DB state if setup was cancelled
+    if (profile2faToggle) {
+        const isEnabled = (parseInt(sessionStorage.getItem('user_2fa_enabled')) === 1);
+        profile2faToggle.checked = isEnabled;
+    }
+};
+
+closeSetupModalBtn?.addEventListener('click', close2FASetupModal);
+setupModal?.addEventListener('click', (e) => {
+    if (e.target === setupModal) {
+        close2FASetupModal();
+    }
+});
+
+profile2faToggle?.addEventListener('change', async (e) => {
+    const checked = profile2faToggle.checked;
+    
+    if (checked) {
+        // Setup flow
+        setupModal?.classList.add('active');
+        if (setupCodeInput) setupCodeInput.focus();
+        
+        try {
+            const res = await api.profile.setup2FA();
+            if (res.data) {
+                if (secretKeyText) secretKeyText.textContent = res.data.secret;
+                if (qrCodeImg) {
+                    qrCodeImg.src = res.data.qr_code_url;
+                    qrCodeImg.onload = () => {
+                        if (qrLoading) qrLoading.style.display = 'none';
+                        qrCodeImg.style.display = 'inline-block';
+                    };
+                }
+            }
+        } catch (err) {
+            alert('Failed to initialize 2FA setup: ' + (err.response?.data?.message || err.message));
+            close2FASetupModal();
+        }
+    } else {
+        // Disable flow
+        if (confirm('Are you sure you want to disable Two-Factor Authentication?')) {
+            try {
+                await api.profile.disable2FA();
+                sessionStorage.setItem('user_2fa_enabled', '0');
+                
+                // Update user info session storage if needed
+                const userInfoStr = sessionStorage.getItem('user_info');
+                if (userInfoStr) {
+                    const user = JSON.parse(userInfoStr);
+                    user.two_factor_enabled = 0;
+                    sessionStorage.setItem('user_info', JSON.stringify(user));
+                }
+                alert('2FA disabled successfully.');
+            } catch (err) {
+                alert('Failed to disable 2FA: ' + (err.response?.data?.message || err.message));
+                profile2faToggle.checked = true;
+            }
+        } else {
+            profile2faToggle.checked = true;
+        }
+    }
+});
+
+setupForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const code = setupCodeInput.value.trim().replace(/\s+/g, '');
+    if (code.length !== 6) {
+        if (setupMessage) setupMessage.textContent = 'Please enter a 6-digit code.';
+        return;
+    }
+
+    try {
+        await api.profile.enable2FA(code);
+        sessionStorage.setItem('user_2fa_enabled', '1');
+        const userInfoStr = sessionStorage.getItem('user_info');
+        if (userInfoStr) {
+            const user = JSON.parse(userInfoStr);
+            user.two_factor_enabled = 1;
+            sessionStorage.setItem('user_info', JSON.stringify(user));
+        }
+        alert('Two-Factor Authentication enabled successfully!');
+        setupModal?.classList.remove('active');
+        if (setupForm) setupForm.reset();
+        if (setupMessage) setupMessage.textContent = '';
+    } catch (err) {
+        if (setupMessage) {
+            setupMessage.textContent = err.response?.data?.message || err.message || 'Verification failed.';
+        }
     }
 });

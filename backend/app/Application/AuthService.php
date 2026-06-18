@@ -4,6 +4,7 @@ namespace App\Application;
 use Core\Database;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+use App\Infrastructure\GoogleAuthenticator;
 
 class AuthService
 {
@@ -71,36 +72,12 @@ class AuthService
         }
 
         if (isset($user['two_factor_enabled']) && (int)$user['two_factor_enabled'] === 1) {
-            $otp = (string)rand(100000, 999999);
-            $expiresAt = date('Y-m-d H:i:s', time() + 300); // 5 minutes TTL
-            
-            $updateStmt = $db->prepare('UPDATE `user` SET two_factor_code = ?, two_factor_expires_at = ? WHERE id = ?');
-            $updateStmt->execute([$otp, $expiresAt, $user['id']]);
-            
-            $mailSent = true;
-            $mailError = null;
-            try {
-                $this->sendTwoFactorEmail($user['email'], $user['full_name'], $otp);
-            } catch (\Exception $e) {
-                $mailSent = false;
-                $mailError = $e->getMessage();
-                error_log("2FA OTP code for {$user['email']}: {$otp} (Mail error: {$mailError})");
-            }
-            
             $tempToken = base64_encode('2fa_temp:' . $user['id'] . ':' . time());
-            
-            $config = $this->loadEnvConfig();
-            $appEnv = $config['APP_ENV'] ?? 'local';
-            $appDebug = $config['APP_DEBUG'] ?? 'true';
-            $isDevelopment = ($appEnv === 'local' || $appDebug === 'true' || $appDebug === true);
             
             return [
                 'requires_2fa' => true,
                 'temp_token' => $tempToken,
-                'email' => $user['email'],
-                'mail_sent' => $mailSent,
-                'mail_error' => $mailError,
-                'debug_otp' => $isDevelopment ? $otp : null
+                'email' => $user['email']
             ];
         }
 
@@ -288,16 +265,13 @@ class AuthService
             throw new \Exception('User not found.');
         }
         
-        if (empty($user['two_factor_code']) || $user['two_factor_code'] !== $code) {
+        if (empty($user['two_factor_secret'])) {
+            throw new \Exception('Two-factor authentication secret is not set.');
+        }
+        
+        if (!GoogleAuthenticator::verifyCode($user['two_factor_secret'], $code)) {
             throw new \Exception('Invalid verification code.');
         }
-        
-        if (strtotime($user['two_factor_expires_at']) < time()) {
-            throw new \Exception('Verification code has expired. Please log in again.');
-        }
-        
-        $clearStmt = $db->prepare('UPDATE `user` SET two_factor_code = NULL, two_factor_expires_at = NULL WHERE id = ?');
-        $clearStmt->execute([$userId]);
         
         $roleStmt = $db->prepare('SELECT r.name FROM role r JOIN user_roles ur ON r.id = ur.role_id WHERE ur.user_id = ?');
         $roleStmt->execute([$user['id']]);

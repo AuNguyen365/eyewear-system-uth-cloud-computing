@@ -110,4 +110,56 @@ class ProfileController extends BaseController
             return ApiResponse::error('Failed to upload avatar: ' . $e->getMessage());
         }
     }
+
+    public function setup2FA()
+    {
+        $userId = $this->getUserId();
+        if (!$userId) {
+            return ApiResponse::unauthorized();
+        }
+
+        try {
+            $data = $this->profileService->setup2FA($userId);
+            return ApiResponse::success($data, 'Google Authenticator setup initialized.');
+        } catch (Exception $e) {
+            return ApiResponse::error('Failed to setup 2FA: ' . $e->getMessage());
+        }
+    }
+
+    public function enable2FA()
+    {
+        $userId = $this->getUserId();
+        if (!$userId) {
+            return ApiResponse::unauthorized();
+        }
+
+        $data = $this->getJsonInput();
+        $code = $data['code'] ?? null;
+
+        if (empty($code)) {
+            return ApiResponse::validationError('Verification code is required.');
+        }
+
+        try {
+            $this->profileService->enable2FA($userId, $code);
+            return ApiResponse::success(null, 'Google Authenticator 2FA enabled successfully.');
+        } catch (Exception $e) {
+            return ApiResponse::error('Failed to enable 2FA: ' . $e->getMessage());
+        }
+    }
+
+    public function disable2FA()
+    {
+        $userId = $this->getUserId();
+        if (!$userId) {
+            return ApiResponse::unauthorized();
+        }
+
+        try {
+            $this->profileService->disable2FA($userId);
+            return ApiResponse::success(null, 'Google Authenticator 2FA disabled successfully.');
+        } catch (Exception $e) {
+            return ApiResponse::error('Failed to disable 2FA: ' . $e->getMessage());
+        }
+    }
 }

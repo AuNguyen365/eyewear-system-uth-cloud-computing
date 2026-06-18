@@ -62,6 +62,9 @@ Router::group(['prefix' => 'api/v1'], function () {
         Router::get('/', [ProfileController::class, 'show']);
         Router::put('/', [ProfileController::class, 'update']);
         Router::post('avatar', [ProfileController::class, 'uploadAvatar']);
+        Router::post('2fa/setup', [ProfileController::class, 'setup2FA']);
+        Router::post('2fa/enable', [ProfileController::class, 'enable2FA']);
+        Router::post('2fa/disable', [ProfileController::class, 'disable2FA']);
         
         Router::get('addresses', [AddressController::class, 'index']);
         Router::post('addresses', [AddressController::class, 'store']);

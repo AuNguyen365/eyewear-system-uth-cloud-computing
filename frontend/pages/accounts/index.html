@@ -186,12 +186,11 @@
                       <input
                         id="profile-2fa-toggle"
                         type="checkbox"
-                        name="two_factor_enabled"
                         value="1"
                         style="width: 20px; height: 20px; cursor: pointer; accent-color: var(--first-color);"
                       />
                       <label class="profile-editor__label" for="profile-2fa-toggle" style="margin-bottom: 0; cursor: pointer; font-weight: 500;">
-                        Enable Two-Factor Authentication (OTP via Email)
+                        Enable Two-Factor Authentication (Google Authenticator)
                       </label>
                     </div>
                   </form>
@@ -274,6 +273,37 @@
             </div>
             <div class="modal__body" id="order-modal-content">
                 <div class="loading-spinner">Loading...</div>
+            </div>
+        </div>
+    </div>
+
+    <!--=============== 2FA SETUP MODAL ===============-->
+    <div id="two-factor-setup-modal" class="prescription-modal-overlay">
+        <div class="two-factor-modal-content" style="max-width: 450px; background: #fff; padding: 25px; border-radius: 15px; position: relative;">
+            <div class="modal__header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 15px;">
+                <h3 class="modal__title" style="margin: 0; font-size: 1.25rem; font-weight: 600; color: #1e293b;">Google Authenticator Setup</h3>
+                <button type="button" class="modal__close" id="close-2fa-setup-modal" style="font-size: 24px; background: none; border: none; cursor: pointer; color: #94a3b8;">&times;</button>
+            </div>
+            <div class="modal__body" style="text-align: center; padding: 10px 0;">
+                <p style="font-size: 0.9rem; line-height: 1.5; color: #4b5563; margin-bottom: 20px;">
+                    Scan the QR code below with your Google Authenticator or any TOTP app, then enter the 6-digit verification code.
+                </p>
+                <div style="margin-bottom: 20px; display: flex; justify-content: center;">
+                    <img id="two-factor-qr-code" src="" alt="2FA QR Code" style="border: 1.5px solid #e2e8f0; padding: 10px; border-radius: 12px; display: none; width: 180px; height: 180px;" />
+                    <div id="two-factor-qr-loading" style="width: 180px; height: 180px; display: flex; align-items: center; justify-content: center; border: 1.5px solid #e2e8f0; border-radius: 12px; background: #f8fafc; color: #64748b; font-size: 0.85rem;">
+                        Loading QR Code...
+                    </div>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 6px;">Or enter this key manually in your app:</p>
+                    <code id="two-factor-secret-key" style="font-family: monospace; font-size: 1.15rem; font-weight: 700; background: #f1f5f9; padding: 8px 16px; border-radius: 8px; letter-spacing: 1px; color: #0b6f63; display: inline-block;">-</code>
+                </div>
+                <form id="two-factor-setup-form" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+                    <input type="text" id="two-factor-setup-code" maxlength="6" placeholder="0 0 0 0 0 0" required 
+                           style="font-size: 24px; font-weight: 700; letter-spacing: 6px; text-align: center; padding: 10px; margin-bottom: 15px; width: 100%; max-width: 200px; border: 1.5px solid #cbd5e1; border-radius: 8px; outline: none; transition: 0.3s; background: #f8fafc;" />
+                    <div id="two-factor-setup-message" class="auth-message error" style="margin-bottom: 15px; font-size: 0.85rem; color: #ef4444;" aria-live="polite"></div>
+                    <button type="submit" class="btn" style="width: 100%; max-width: 200px; margin-top: 5px;">Verify & Enable</button>
+                </form>
             </div>
         </div>
     </div>
