@@ -5,6 +5,7 @@ namespace App\Application;
 use App\Models\Profile;
 use App\Models\User;
 use Core\Database;
+use App\Infrastructure\GoogleAuthenticator;
 
 class ProfileService
 {
@@ -74,8 +75,11 @@ class ProfileService
 
         if (isset($data['two_factor_enabled'])) {
             $twoFactorEnabled = (int)$data['two_factor_enabled'] ? 1 : 0;
-            $updateUser2FA = $db->prepare('UPDATE `user` SET two_factor_enabled = ? WHERE id = ?');
-            $updateUser2FA->execute([$twoFactorEnabled, $userId]);
+            if ($twoFactorEnabled === 0) {
+                $this->disable2FA($userId);
+            } else {
+                throw new \Exception('Please use the 2FA verification flow to enable Google Authenticator.');
+            }
         }
 
         $profile = Profile::firstWhere('user_id', $userId);
@@ -122,5 +126,65 @@ class ProfileService
 
         $profile->update(['avatar' => $filePath]);
         return $profile->toArray();
+    }
+
+    /**
+     * Setup 2FA: Generate a TOTP secret and return QR code URL
+     */
+    public function setup2FA(int $userId): array
+    {
+        $db = Database::getInstance();
+        $stmt = $db->prepare('SELECT email FROM `user` WHERE id = ?');
+        $stmt->execute([$userId]);
+        $user = $stmt->fetch();
+        if (!$user) {
+            throw new \Exception('User not found');
+        }
+
+        $secret = GoogleAuthenticator::generateSecret();
+        
+        // Save the secret temporarily, but keep enabled = 0
+        $update = $db->prepare('UPDATE `user` SET two_factor_secret = ? WHERE id = ?');
+        $update->execute([$secret, $userId]);
+
+        $qrCodeUrl = GoogleAuthenticator::getQrCodeUrl('EVELENS', $user['email'], $secret);
+        // Render QR using qrserver API
+        $qrCodeImgUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' . urlencode($qrCodeUrl);
+
+        return [
+            'secret' => $secret,
+            'qr_code_url' => $qrCodeImgUrl
+        ];
+    }
+
+    /**
+     * Enable 2FA: Verify a TOTP code and enable 2FA
+     */
+    public function enable2FA(int $userId, string $code): void
+    {
+        $db = Database::getInstance();
+        $stmt = $db->prepare('SELECT two_factor_secret FROM `user` WHERE id = ?');
+        $stmt->execute([$userId]);
+        $user = $stmt->fetch();
+        if (!$user || empty($user['two_factor_secret'])) {
+            throw new \Exception('2FA setup is not initialized.');
+        }
+
+        if (!GoogleAuthenticator::verifyCode($user['two_factor_secret'], $code)) {
+            throw new \Exception('Invalid verification code.');
+        }
+
+        $update = $db->prepare('UPDATE `user` SET two_factor_enabled = 1 WHERE id = ?');
+        $update->execute([$userId]);
+    }
+
+    /**
+     * Disable 2FA: Disable 2FA and clear secret
+     */
+    public function disable2FA(int $userId): void
+    {
+        $db = Database::getInstance();
+        $update = $db->prepare('UPDATE `user` SET two_factor_enabled = 0, two_factor_secret = NULL WHERE id = ?');
+        $update->execute([$userId]);
     }
 }

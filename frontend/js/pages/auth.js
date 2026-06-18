@@ -157,13 +157,8 @@ import api from '../services/api.js';
                 if (twoFactorEmailDisplay) twoFactorEmailDisplay.textContent = response.data.email || '';
                 
                 if (twoFactorMessage) {
-                    if (response.data.mail_sent === false) {
-                        twoFactorMessage.style.color = '#e65100'; // Orange warning color
-                        twoFactorMessage.innerHTML = `⚠️ <strong>Notice:</strong> SMTP send failed (${response.data.mail_error}).<br>Use debug code: <strong>${response.data.debug_otp}</strong> to sign in.`;
-                    } else {
-                        twoFactorMessage.style.color = '';
-                        twoFactorMessage.textContent = '';
-                    }
+                    twoFactorMessage.style.color = '';
+                    twoFactorMessage.textContent = '';
                 }
                 
                 twoFactorModal?.classList.add('active');
